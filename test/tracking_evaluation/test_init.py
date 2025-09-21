@@ -1,4 +1,5 @@
 """."""
+
 import pytest
 
 from eval_ab_3d_mot.tracking_evaluation import TrackingEvaluation

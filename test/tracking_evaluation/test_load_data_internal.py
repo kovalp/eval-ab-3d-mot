@@ -17,5 +17,3 @@ def test_ground_truth(te: TrackingEvaluation, files_dir: Path) -> None:
     assert len(te.groundtruth[0]) == 448
     assert len(te.groundtruth[0][0]) == 7
     assert isinstance(te.groundtruth[0][0][0], TrackData)
-
-
