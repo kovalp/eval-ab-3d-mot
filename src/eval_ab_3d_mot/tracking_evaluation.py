@@ -230,7 +230,7 @@ class TrackingEvaluation(object):
                         return
 
                 # do not consider objects marked as invalid
-                if t_data.track_id is -1 and t_data.obj_type != 'dontcare':
+                if t_data.track_id == -1 and t_data.obj_type != 'dontcare':
                     continue
 
                 idx = t_data.frame
