@@ -28,3 +28,9 @@ ignored: False
 valid: False
 tracker: -1"""
     assert str(t_data) == ref
+
+
+def test_track_data_repr() -> None:
+    """."""
+    t_data = TrackData(track_id=123, frame=456, x=1, y=2, z=3)
+    assert t_data.__repr__() == 'Track(id 123 frame 456 x 1 y 2 z 3)'

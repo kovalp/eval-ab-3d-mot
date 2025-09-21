@@ -36,7 +36,7 @@ def evaluate(result_sha, num_hypo, eval_3diou, eval_2diou, thres):
             print('   Caught exception while loading result data.')
             break
         # load groundtruth data for this class
-        if not e.loadGroundtruth():
+        if not e.load_ground_truth():
             raise ValueError('Ground truth not found.')
         print('Loading Groundtruth - Success')
         # sanity checks

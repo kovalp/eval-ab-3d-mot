@@ -24,7 +24,7 @@ class TrackData:
         ry=-10,
         score=-1000,
         track_id=-1,
-    ):
+    ) -> None:
         """
         Constructor, initializes the object given the parameters.
         """
@@ -50,7 +50,10 @@ class TrackData:
         self.valid = False
         self.tracker = -1
 
-    def __str__(self):
+    def __repr__(self) -> str:
+        return f'Track(id {self.track_id} frame {self.frame} x {self.x} y {self.y} z {self.z})'
+
+    def __str__(self) -> str:
         """
         Print read data.
         """
