@@ -26,7 +26,7 @@ def evaluate(result_sha, num_hypo, eval_3diou, eval_2diou, thres):
         )
         # load tracker data and check provided classes
         try:
-            if not e.loadTracker():
+            if not e.load_data(is_ground_truth=False):
                 continue
             print('Loading Results - Success')
             print('Evaluate Object Class: %s' % c.upper())
@@ -36,7 +36,7 @@ def evaluate(result_sha, num_hypo, eval_3diou, eval_2diou, thres):
             print('   Caught exception while loading result data.')
             break
         # load groundtruth data for this class
-        if not e.load_ground_truth():
+        if not e.load_data(is_ground_truth=True):
             raise ValueError('Ground truth not found.')
         print('Loading Groundtruth - Success')
         # sanity checks
@@ -55,7 +55,7 @@ def evaluate(result_sha, num_hypo, eval_3diou, eval_2diou, thres):
             suffix = 'eval2D'
         filename = os.path.join(e.t_path, '../summary_%s_average_%s.txt' % (c, suffix))
         dump = open(filename, 'w+')
-        stat_meter = Stat(t_sha=result_sha, cls=c, suffix=suffix, dump=dump)
+        stat_meter = Stat(t_sha=result_sha, cls=c, suffix=suffix)
         e.compute3rdPartyMetrics()
 
         # evaluate the mean average metrics
