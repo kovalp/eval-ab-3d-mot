@@ -2,8 +2,10 @@
 
 import os
 
-import numpy as np
 import matplotlib
+import numpy as np
+
+
 matplotlib.use('Agg')
 
 import matplotlib.pyplot as plt
@@ -165,4 +167,3 @@ class Stat:
             'Precision',
             os.path.join(save_dir, 'precision_recall_curve_%s_%s.pdf' % (self.cls, self.suffix)),
         )
-

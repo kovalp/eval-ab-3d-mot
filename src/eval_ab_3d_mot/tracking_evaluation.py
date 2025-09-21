@@ -1,16 +1,18 @@
 """."""
 
-from collections import defaultdict
 import copy
-import os
 import math
+import os
+
+from collections import defaultdict
 
 import numpy as np
+
 from munkres import Munkres
 from pure_ab_3d_mot.iou import iou
 
-from .stat import NUM_SAMPLE_POINTS
 from .box_overlap import box_overlap
+from .stat import NUM_SAMPLE_POINTS
 from .track_data import TrackData
 
 
@@ -52,8 +54,8 @@ class TrackingEvaluation(object):
         self.n_frames = []
         self.sequence_name = []
         with open(filename_test_mapping, 'r') as fh:
-            for i, l in enumerate(fh):
-                fields = l.split(' ')
+            for i, line in enumerate(fh):
+                fields = line.split(' ')
                 self.sequence_name.append('%04d' % int(fields[0]))
                 self.n_frames.append(int(fields[3]) - int(fields[2]) + 1)
         fh.close()
@@ -168,7 +170,6 @@ class TrackingEvaluation(object):
         """
         # construct objectDetections object to hold detection data
         t_data = TrackData()
-        data = []
         eval_2d = True
         eval_3d = True
 
@@ -176,7 +177,6 @@ class TrackingEvaluation(object):
         n_trajectories = 0
         n_trajectories_seq = []
         for seq, s_name in enumerate(self.sequence_name):
-            i = 0
             filename = os.path.join(root_dir, '%s.txt' % s_name)
             f = open(filename, 'r')
 
@@ -245,9 +245,7 @@ class TrackingEvaluation(object):
                             'track ids are not unique for sequence %d: frame %d'
                             % (seq, t_data.frame)
                         )
-                        print(
-                            'track id %d occured at least twice for this frame' % t_data.track_id
-                        )
+                        print('track id %d occured at least twice for this frame' % t_data.track_id)
                         print('Exiting...')
                         # continue # this allows to evaluate non-unique result files
                         return False
@@ -995,10 +993,10 @@ class TrackingEvaluation(object):
         """
 
         s_out = key.ljust(width[0])
-        if type(val) == int:
+        if isinstance(val, int):
             s = '%%%dd' % width[1]
             s_out += s % val
-        elif type(val) == float:
+        elif isinstance(val, float):
             s = '%%%d.4f' % (width[1])
             s_out += s % val
         else:

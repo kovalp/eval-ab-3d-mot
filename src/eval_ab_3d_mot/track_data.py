@@ -4,7 +4,6 @@ Utility class to load data.
 
 
 class TrackData:
-
     def __init__(
         self,
         frame=-1,
@@ -18,7 +17,7 @@ class TrackData:
         y2=-1,
         w=-1,
         h=-1,
-        l=-1,
+        l=-1,  # noqa: E741
         x=-1000,
         y=-1000,
         z=-1000,

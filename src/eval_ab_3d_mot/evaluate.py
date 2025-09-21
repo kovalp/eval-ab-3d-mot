@@ -1,10 +1,10 @@
 """."""
 
-from .tracking_evaluation import TrackingEvaluation
-from .stat import Stat
-
-import sys
 import os
+import sys
+
+from .stat import Stat
+from .tracking_evaluation import TrackingEvaluation
 
 
 def evaluate(result_sha, num_hypo, eval_3diou, eval_2diou, thres):
@@ -31,7 +31,7 @@ def evaluate(result_sha, num_hypo, eval_3diou, eval_2diou, thres):
             print('Loading Results - Success')
             print('Evaluate Object Class: %s' % c.upper())
             classes.append(c)
-        except:
+        except:  # noqa: E722
             print('Feel free to contact us (lenz@kit.edu), if you receive this error message:')
             print('   Caught exception while loading result data.')
             break
@@ -133,4 +133,4 @@ def main() -> None:
         eval_3diou, eval_2diou = True, False  # eval 3d
         thres = None
 
-    success = evaluate(result_sha, num_hypo, eval_3diou, eval_2diou, thres)
+    evaluate(result_sha, num_hypo, eval_3diou, eval_2diou, thres)
