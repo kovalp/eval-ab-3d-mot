@@ -5,7 +5,7 @@ import math
 import os
 
 from collections import defaultdict
-from typing import Union
+from typing import List, Union
 
 import numpy as np
 
@@ -30,6 +30,18 @@ SEQ_LENGTHS_NAME = {
     '0018': 340,
     '0019': 1060,
 }
+
+
+def get_classes(cls: str) -> List[str]:
+    # classes that should be loaded (ignored neighboring classes)
+    cls_lower = cls.lower()
+    classes = [cls_lower]
+    if cls_lower == 'car':
+        classes.append('van')
+    elif cls_lower == 'pedestrian':
+        classes.append('person_sitting')
+    classes.append('dontcare')
+    return classes
 
 
 class TrackingEvaluation(object):
@@ -169,12 +181,13 @@ class TrackingEvaluation(object):
         seq_data = []
         n_trajectories = 0
         n_trajectories_seq = []
+        classes = get_classes(cls)
         for seq, s_name in enumerate(self.sequence_name):
             filename = os.path.join(root_dir, '%s.txt' % s_name)
             f = open(filename, 'r')
 
             f_data = [
-                [] for x in range(self.n_frames[seq])
+                [] for _ in range(self.n_frames[seq])
             ]  # current set has only 1059 entries, sufficient length is checked anyway
             ids = []
             n_in_seq = 0
@@ -184,14 +197,6 @@ class TrackingEvaluation(object):
                 # (frame,tracklet_id,objectType,truncation,occlusion,alpha,x1,y1,x2,y2,h,w,l,X,Y,Z,ry)
                 line = line.strip()
                 fields = line.split(' ')
-                # classes that should be loaded (ignored neighboring classes)
-                if 'car' in cls.lower():
-                    classes = ['car', 'van']
-                elif 'pedestrian' in cls.lower():
-                    classes = ['pedestrian', 'person_sitting']
-                else:
-                    classes = [cls.lower()]
-                classes += ['dontcare']
                 if not any([s for s in classes if s in fields[2].lower()]):
                     continue
                 # get fields from table
@@ -220,7 +225,7 @@ class TrackingEvaluation(object):
                         t_data.score = float(fields[17])  # detection score
                     else:
                         print('file is not in KITTI format')
-                        return
+                        return False
 
                 # do not consider objects marked as invalid
                 if t_data.track_id == -1 and t_data.obj_type != 'dontcare':
