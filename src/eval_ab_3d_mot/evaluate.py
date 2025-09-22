@@ -89,8 +89,7 @@ def evaluate(result_sha, num_hypo, eval_3diou, eval_2diou, thres):
         e.saveToStats(dump)
 
         stat_meter.output()
-        summary = stat_meter.print_summary()
-        stat_meter.plot()
+        summary = stat_meter.get_summary()
         print(summary)  # mail or print the summary.
         dump.close()
 
