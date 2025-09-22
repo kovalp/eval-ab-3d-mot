@@ -236,22 +236,17 @@ class TrackingEvaluation(object):
                 if idx >= len(f_data):
                     print('extend f_data', idx, len(f_data))
                     f_data += [[] for x in range(max(500, idx - len(f_data)))]
-                try:
-                    id_frame = (t_data.frame, t_data.track_id)
-                    if id_frame in id_frame_cache and not is_ground_truth:
-                        print(
-                            'track ids are not unique for sequence %d: frame %d'
-                            % (seq, t_data.frame)
-                        )
-                        print('track id %d occured at least twice for this frame' % t_data.track_id)
-                        print('Exiting...')
-                        # continue # this allows to evaluate non-unique result files
-                        return False
-                    id_frame_cache.append(id_frame)
-                    f_data[t_data.frame].append(copy.copy(t_data))
-                except:
-                    print(len(f_data), idx)
-                    raise
+                id_frame = (t_data.frame, t_data.track_id)
+                if id_frame in id_frame_cache and not is_ground_truth:
+                    print(
+                        'track ids are not unique for sequence %d: frame %d' % (seq, t_data.frame)
+                    )
+                    print('track id %d occured at least twice for this frame' % t_data.track_id)
+                    print('Exiting...')
+                    # continue # this allows to evaluate non-unique result files
+                    return False
+                id_frame_cache.append(id_frame)
+                f_data[t_data.frame].append(copy.copy(t_data))
 
                 if t_data.track_id not in ids and t_data.obj_type != 'dontcare':
                     ids.append(t_data.track_id)
@@ -261,13 +256,13 @@ class TrackingEvaluation(object):
                 # check if uploaded data provides information for 2D and 3D evaluation
                 if (
                     not is_ground_truth
-                    and eval_2d is True
+                    and eval_2d
                     and (t_data.x1 == -1 or t_data.x2 == -1 or t_data.y1 == -1 or t_data.y2 == -1)
                 ):
                     eval_2d = False
                 if (
                     not is_ground_truth
-                    and eval_3d is True
+                    and eval_3d
                     and (t_data.x == -1000 or t_data.y == -1000 or t_data.z == -1000)
                 ):
                     eval_3d = False

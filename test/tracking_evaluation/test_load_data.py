@@ -17,8 +17,7 @@ def test_load_data_tracking(te: TrackingEvaluation, mocker: MockerFixture) -> No
     """."""
     mock_load_data = mocker.patch.object(te, '_load_data')
     assert te.load_data()
-    t_path_ref = './results/KITTI/my-sha/data_0'
-    mock_load_data.assert_called_once_with(t_path_ref, cls='car', is_ground_truth=False)
+    mock_load_data.assert_called_once_with(te.t_path, cls='car', is_ground_truth=False)
 
 
 def test_load_data_io_error(te: TrackingEvaluation, mocker: MockerFixture) -> None:

@@ -5,7 +5,8 @@ import pytest
 from eval_ab_3d_mot.tracking_evaluation import TrackingEvaluation
 
 
-def test_init_3d_no_threshold(te: TrackingEvaluation) -> None:
+def test_init_3d_no_threshold() -> None:
+    te = TrackingEvaluation('my-sha', gt_path='kitti-root')
     assert len(te.sequence_name) == len(te.n_frames) == te.n_sequences
     assert te.t_path == './results/KITTI/my-sha/data_0'
     assert te.gt_path == 'kitti-root/label'
