@@ -303,37 +303,7 @@ class TrackingEvaluation(object):
             self.n_gt_trajectories = n_trajectories
         return True
 
-    def getThresholds(self, scores, num_gt, num_sample_pts=NUM_SAMPLE_POINTS):
-        # based on score of true positive to discretize the recall
-        # not necessarily have data on all points due to not fully recall the results, all the results point has zero precision
-        # compute the recall based on the gt positives
-
-        # scores: the list of scores of the matched true positives
-
-        scores = np.array(scores)
-        scores.sort()
-        scores = scores[::-1]
-        current_recall = 0
-        thresholds = []
-        recalls = []
-        for i, score in enumerate(scores):
-            l_recall = (i + 1) / float(num_gt)
-            if i < (len(scores) - 1):
-                r_recall = (i + 2) / float(num_gt)
-            else:
-                r_recall = l_recall
-            if ((r_recall - current_recall) < (current_recall - l_recall)) and (
-                i < (len(scores) - 1)
-            ):
-                continue
-
-            thresholds.append(score)
-            recalls.append(current_recall)
-            current_recall += 1 / (num_sample_pts - 1.0)
-
-        return thresholds[1:], recalls[1:]  # throw the first one with 0 recall
-
-    def reset(self):
+    def reset(self) -> None:
         self.n_gt = (
             0  # number of ground truth detections minus ignored false negatives and true positives
         )
@@ -380,8 +350,6 @@ class TrackingEvaluation(object):
 
         self.gt_trajectories = [[] for x in range(self.n_sequences)]
         self.ign_trajectories = [[] for x in range(self.n_sequences)]
-
-        return
 
     def compute3rdPartyMetrics(self, threshold=-10000, recall_thres=1.0):
         # def compute3rdPartyMetrics(self, threshold=3):

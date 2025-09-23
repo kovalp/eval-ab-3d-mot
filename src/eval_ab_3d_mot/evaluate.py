@@ -4,6 +4,7 @@ import os
 import sys
 
 from .stat import Stat
+from .thresholds import get_thresholds
 from .tracking_evaluation import TrackingEvaluation
 
 
@@ -60,7 +61,7 @@ def evaluate(result_sha, num_hypo, eval_3diou, eval_2diou, thres):
 
         # evaluate the mean average metrics
         best_mota, best_threshold = 0, -10000
-        threshold_list, recall_list = e.getThresholds(e.scores, e.num_gt)
+        threshold_list, recall_list = get_thresholds(e.scores, e.num_gt)
         for threshold_tmp, recall_tmp in zip(threshold_list, recall_list):
             data_tmp = dict()
             e.reset()
