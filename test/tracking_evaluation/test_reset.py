@@ -7,4 +7,3 @@ def test_reset(te: TrackingEvaluation) -> None:
     te.tp = 123
     te.reset()
     assert te.tp == 0
-

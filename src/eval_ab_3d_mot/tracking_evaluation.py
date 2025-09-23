@@ -7,13 +7,11 @@ import os
 from collections import defaultdict
 from typing import List, Union
 
-import numpy as np
-
 from munkres import Munkres
+from pure_ab_3d_mot.dist_metrics import MetricKind
 from pure_ab_3d_mot.iou import iou
 
 from .box_overlap import box_overlap
-from .stat import NUM_SAMPLE_POINTS
 from .track_data import TrackData
 
 
@@ -149,26 +147,31 @@ class TrackingEvaluation(object):
         self.min_height = min_height  # minimum height of an object for evaluation
         self.n_sample_points = 500
 
-        # this should be enough to hold all groundtruth trajectories
+        # this should be enough to hold all ground-truth trajectories
         # is expanded if necessary and reduced in any case
         self.gt_trajectories = [[] for _ in range(self.n_sequences)]
         self.ign_trajectories = [[] for _ in range(self.n_sequences)]
+        self.scores: List = []
+        self.ground_truth: List = []
+        self.dcareas: List = []
+        self.tracker: List = []
+        self.num_gt: int = 0
 
-    def load_data(self, is_ground_truth: bool = False) -> bool:
+    def load_data(self, is_ground_truth: bool) -> bool:
         """
         Helper function to load ground truth or tracking data.
         """
 
         try:
             if is_ground_truth:
-                self._load_data(self.gt_path, cls=self.cls, is_ground_truth=is_ground_truth)
+                self._load_data(self.gt_path, self.cls, is_ground_truth)
             else:
-                self._load_data(self.t_path, cls=self.cls, is_ground_truth=is_ground_truth)
+                self._load_data(self.t_path, self.cls, is_ground_truth)
         except IOError:
             return False
         return True
 
-    def _load_data(self, root_dir: str, cls: str, is_ground_truth: bool = False) -> bool:
+    def _load_data(self, root_dir: str, cls: str, is_ground_truth: bool) -> bool:
         """
         Generic loader for ground truth and tracking data.
         Loads detections in KITTI format from textfiles.
@@ -282,8 +285,8 @@ class TrackingEvaluation(object):
                 return False
         else:
             # split ground truth and DontCare areas
-            self.dcareas = []
-            self.groundtruth = []
+            self.dcareas.clear()
+            self.ground_truth.clear()
             for seq_idx in range(len(seq_data)):
                 seq_gt = seq_data[seq_idx]
                 s_g, s_dc = [], []
@@ -298,61 +301,14 @@ class TrackingEvaluation(object):
                     s_g.append(g)
                     s_dc.append(dc)
                 self.dcareas.append(s_dc)
-                self.groundtruth.append(s_g)
+                self.ground_truth.append(s_g)
             self.n_gt_seq = n_trajectories_seq
             self.n_gt_trajectories = n_trajectories
         return True
 
-    def reset(self) -> None:
-        self.n_gt = (
-            0  # number of ground truth detections minus ignored false negatives and true positives
-        )
-        self.n_igt = 0  # number of ignored ground truth detections
-        self.n_tr = 0  # number of tracker detections minus ignored tracker detections
-        self.n_itr = 0  # number of ignored tracker detections
-        self.n_igttr = 0  # number of ignored ground truth detections where the corresponding associated tracker detection is also ignored
-
-        self.MOTA = 0
-        self.MOTP = 0
-        self.MOTAL = 0
-        self.MODA = 0
-        self.MODP = 0
-        self.MODP_t = []
-
-        self.recall = 0
-        self.precision = 0
-        self.F1 = 0
-        self.FAR = 0
-
-        self.total_cost = 0
-        self.itp = 0
-        self.tp = 0
-        self.fn = 0
-        self.ifn = 0
-        self.fp = 0
-
-        self.n_gts = []  # number of ground truth detections minus ignored false negatives and true positives PER SEQUENCE
-        self.n_igts = []  # number of ground ignored truth detections PER SEQUENCE
-        self.n_trs = []  # number of tracker detections minus ignored tracker detections PER SEQUENCE
-        self.n_itrs = []  # number of ignored tracker detections PER SEQUENCE
-
-        self.itps = []  # number of ignored true positives PER SEQUENCE
-        self.tps = []  # number of true positives including ignored true positives PER SEQUENCE
-        self.fns = []  # number of false negatives WITHOUT ignored false negatives PER SEQUENCE
-        self.ifns = []  # number of ignored false negatives PER SEQUENCE
-        self.fps = []  # above PER SEQUENCE
-
-        self.fragments = 0
-        self.id_switches = 0
-        self.MT = 0
-        self.PT = 0
-        self.ML = 0
-
-        self.gt_trajectories = [[] for x in range(self.n_sequences)]
-        self.ign_trajectories = [[] for x in range(self.n_sequences)]
-
-    def compute3rdPartyMetrics(self, threshold=-10000, recall_thres=1.0):
-        # def compute3rdPartyMetrics(self, threshold=3):
+    def compute_3rd_party_metrics(
+        self, threshold: float = -10000.0, recall_thres: float = 1.0
+    ) -> bool:
         """
         Computes the metrics defined in
             - Stiefelhagen 2008: Evaluating Multiple Object Tracking Performance: The CLEAR MOT Metrics
@@ -364,13 +320,13 @@ class TrackingEvaluation(object):
         # construct Munkres object for Hungarian Method association
         hm = Munkres()
         max_cost = 1e9
-        self.scores = list()
+        self.scores.clear()
 
         # go through all frames and associate ground truth and tracker results
-        # groundtruth and tracker contain lists for every single frame containing lists of KITTI format detections
+        # ground truth and tracker contain lists for every single frame containing lists of KITTI format detections
         fr, ids = 0, 0
-        for seq_idx in range(len(self.groundtruth)):
-            seq_gt = self.groundtruth[seq_idx]
+        for seq_idx in range(len(self.ground_truth)):
+            seq_gt = self.ground_truth[seq_idx]
             seq_dc = self.dcareas[seq_idx]  # don't care areas
             seq_tracker_before = self.tracker[seq_idx]
 
@@ -455,7 +411,7 @@ class TrackingEvaluation(object):
                         if self.eval_2diou:
                             c = 1 - box_overlap(gg, tt)
                         elif self.eval_3diou:
-                            c = 1 - iou(gg, tt, metric='iou_3d')
+                            c = 1 - iou(gg, tt, metric=MetricKind.IOU_3D)
                         else:
                             assert False, 'error'
 
@@ -482,7 +438,7 @@ class TrackingEvaluation(object):
                 tmpc = 0  # this will sum up the overlaps for all true positives
                 tmpcs = [0] * len(g)  # this will save the overlaps for all true positives
                 # the reason is that some true positives might be ignored
-                # later such that the corrsponding overlaps can
+                # later such that the corresponding overlaps can
                 # be subtracted from tmpc for MODP computation
 
                 # mapping for tracker ids and ground truth ids
@@ -947,6 +903,54 @@ class TrackingEvaluation(object):
         summary += '=' * 80
 
         return summary
+
+    def reset(self) -> None:
+        self.n_gt = (
+            0  # number of ground truth detections minus ignored false negatives and true positives
+        )
+        self.n_igt = 0  # number of ignored ground truth detections
+        self.n_tr = 0  # number of tracker detections minus ignored tracker detections
+        self.n_itr = 0  # number of ignored tracker detections
+        self.n_igttr = 0  # number of ignored ground truth detections where the corresponding associated tracker detection is also ignored
+
+        self.MOTA = 0
+        self.MOTP = 0
+        self.MOTAL = 0
+        self.MODA = 0
+        self.MODP = 0
+        self.MODP_t = []
+
+        self.recall = 0
+        self.precision = 0
+        self.F1 = 0
+        self.FAR = 0
+
+        self.total_cost = 0
+        self.itp = 0
+        self.tp = 0
+        self.fn = 0
+        self.ifn = 0
+        self.fp = 0
+
+        self.n_gts = []  # number of ground truth detections minus ignored false negatives and true positives PER SEQUENCE
+        self.n_igts = []  # number of ground ignored truth detections PER SEQUENCE
+        self.n_trs = []  # number of tracker detections minus ignored tracker detections PER SEQUENCE
+        self.n_itrs = []  # number of ignored tracker detections PER SEQUENCE
+
+        self.itps = []  # number of ignored true positives PER SEQUENCE
+        self.tps = []  # number of true positives including ignored true positives PER SEQUENCE
+        self.fns = []  # number of false negatives WITHOUT ignored false negatives PER SEQUENCE
+        self.ifns = []  # number of ignored false negatives PER SEQUENCE
+        self.fps = []  # above PER SEQUENCE
+
+        self.fragments = 0
+        self.id_switches = 0
+        self.MT = 0
+        self.PT = 0
+        self.ML = 0
+
+        self.gt_trajectories = [[] for x in range(self.n_sequences)]
+        self.ign_trajectories = [[] for x in range(self.n_sequences)]
 
     def printEntry(self, key, val, width=(70, 10)):
         """

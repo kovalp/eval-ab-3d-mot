@@ -12,3 +12,7 @@
   - Add the magic `TrackData.__repr__`.
   - Merge `loadGroundTruth` and `loadTracking` into `load_data`.
   - Abstain from loading data from text file (`scripts/KITTI/evaluate_tracking.seqmap.val`).
+  - Make `TrackingEvaluation.getThresholds` a standalone function (`thresholds.get_thresholds`).
+  - Simplify arguments of the `TrackingEvaluation.load_data`.
+  - Test `TrackingEvaluation.reset()`.
+  - Start testing `TrackingEvaluation.compute_3d_party_metrics`.
