@@ -1,7 +1,9 @@
 """."""
+
 import pytest
 
 from eval_ab_3d_mot.tracking_evaluation import TrackingEvaluation
+
 
 def test_fail_to_associate(te_fail_associate: TrackingEvaluation) -> None:
     """."""
