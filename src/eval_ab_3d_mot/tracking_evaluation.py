@@ -151,10 +151,10 @@ class TrackingEvaluation(object):
         # is expanded if necessary and reduced in any case
         self.gt_trajectories = [[] for _ in range(self.n_sequences)]
         self.ign_trajectories = [[] for _ in range(self.n_sequences)]
-        self.scores: List = []
-        self.ground_truth: List = []
-        self.dcareas: List = []
-        self.tracker: List = []
+        self.scores: List[float] = []
+        self.ground_truth: List[List[List[TrackData]]] = []
+        self.dcareas: List[List[List[TrackData]]] = []
+        self.tracker: List[List[List[TrackData]]] = []
         self.num_gt: int = 0
 
     def load_data(self, is_ground_truth: bool) -> bool:
@@ -406,7 +406,7 @@ class TrackingEvaluation(object):
                     gg.tracker = -1
                     gg.id_switch = 0
                     gg.fragmentation = 0
-                    cost_row = []
+                    cost_row: List[float] = []
                     for tt in t:
                         if self.eval_2diou:
                             c = 1 - box_overlap(gg, tt)
@@ -422,7 +422,7 @@ class TrackingEvaluation(object):
                             cost_row.append(max_cost)  # = 1e9
                     cost_matrix.append(cost_row)
                     # all ground truth trajectories are initially not associated
-                    # extend groundtruth trajectories lists (merge lists)
+                    # extend ground-truth trajectories lists (merge lists)
                     seq_trajectories[gg.track_id].append(-1)
                     seq_ignored[gg.track_id].append(False)
 
