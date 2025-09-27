@@ -15,6 +15,7 @@ requires-python = ">=3.8"
 dependencies = [
     "munkres>=1.1.4",
     "pure-ab-3d-mot>=0.2.2",
+    "pytest-mock>=3.14.1",
     "scipy>=1.10.1",
     "scipy-stubs>=1.14.1.3; python_version > '3.9'",
 ]

@@ -4,6 +4,7 @@ import os
 import sys
 
 from .stat import Stat
+from .thresholds import get_thresholds
 from .tracking_evaluation import TrackingEvaluation
 
 
@@ -26,7 +27,7 @@ def evaluate(result_sha, num_hypo, eval_3diou, eval_2diou, thres):
         )
         # load tracker data and check provided classes
         try:
-            if not e.loadTracker():
+            if not e.load_data(is_ground_truth=False):
                 continue
             print('Loading Results - Success')
             print('Evaluate Object Class: %s' % c.upper())
@@ -36,17 +37,17 @@ def evaluate(result_sha, num_hypo, eval_3diou, eval_2diou, thres):
             print('   Caught exception while loading result data.')
             break
         # load groundtruth data for this class
-        if not e.loadGroundtruth():
+        if not e.load_data(is_ground_truth=True):
             raise ValueError('Ground truth not found.')
         print('Loading Groundtruth - Success')
         # sanity checks
-        if len(e.groundtruth) != len(e.tracker):
+        if len(e.ground_truth) != len(e.tracker):
             print(
                 'The uploaded data does not provide results for every sequence: %d vs %d'
-                % (len(e.groundtruth), len(e.tracker))
+                % (len(e.ground_truth), len(e.tracker))
             )
             return False
-        print('Loaded %d Sequences.' % len(e.groundtruth))
+        print('Loaded %d Sequences.' % len(e.ground_truth))
         print('Start Evaluation...')
 
         if eval_3diou:
@@ -55,16 +56,16 @@ def evaluate(result_sha, num_hypo, eval_3diou, eval_2diou, thres):
             suffix = 'eval2D'
         filename = os.path.join(e.t_path, '../summary_%s_average_%s.txt' % (c, suffix))
         dump = open(filename, 'w+')
-        stat_meter = Stat(t_sha=result_sha, cls=c, suffix=suffix, dump=dump)
-        e.compute3rdPartyMetrics()
+        stat_meter = Stat(t_sha=result_sha, cls=c, suffix=suffix)
+        e.compute_3rd_party_metrics()
 
         # evaluate the mean average metrics
         best_mota, best_threshold = 0, -10000
-        threshold_list, recall_list = e.getThresholds(e.scores, e.num_gt)
+        threshold_list, recall_list = get_thresholds(e.scores, e.num_gt)
         for threshold_tmp, recall_tmp in zip(threshold_list, recall_list):
             data_tmp = dict()
             e.reset()
-            e.compute3rdPartyMetrics(threshold_tmp, recall_tmp)
+            e.compute_3rd_party_metrics(threshold_tmp, recall_tmp)
             (
                 data_tmp['mota'],
                 data_tmp['motp'],
@@ -85,12 +86,11 @@ def evaluate(result_sha, num_hypo, eval_3diou, eval_2diou, thres):
             e.saveToStats(dump, threshold_tmp, recall_tmp)
 
         e.reset()
-        e.compute3rdPartyMetrics(best_threshold)
+        e.compute_3rd_party_metrics(best_threshold)
         e.saveToStats(dump)
 
         stat_meter.output()
-        summary = stat_meter.print_summary()
-        stat_meter.plot()
+        summary = stat_meter.get_summary()
         print(summary)  # mail or print the summary.
         dump.close()
 

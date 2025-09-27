@@ -5,15 +5,41 @@ import math
 import os
 
 from collections import defaultdict
-
-import numpy as np
+from typing import List, Union
 
 from munkres import Munkres
+from pure_ab_3d_mot.dist_metrics import MetricKind
 from pure_ab_3d_mot.iou import iou
 
 from .box_overlap import box_overlap
-from .stat import NUM_SAMPLE_POINTS
 from .track_data import TrackData
+
+
+SEQ_LENGTHS_NAME = {
+    '0001': 448,
+    '0006': 271,
+    '0008': 391,
+    '0010': 295,
+    '0012': 79,
+    '0013': 341,
+    '0014': 107,
+    '0015': 377,
+    '0016': 210,
+    '0018': 340,
+    '0019': 1060,
+}
+
+
+def get_classes(cls: str) -> List[str]:
+    # classes that should be loaded (ignored neighboring classes)
+    cls_lower = cls.lower()
+    classes = [cls_lower]
+    if cls_lower == 'car':
+        classes.append('van')
+    elif cls_lower == 'pedestrian':
+        classes.append('person_sitting')
+    classes.append('dontcare')
+    return classes
 
 
 class TrackingEvaluation(object):
@@ -36,33 +62,21 @@ class TrackingEvaluation(object):
 
     def __init__(
         self,
-        t_sha,
-        gt_path='./scripts/KITTI',
-        max_truncation=0,
-        min_height=25,
-        max_occlusion=2,
-        cls='car',
-        eval_3diou=True,
-        eval_2diou=False,
-        num_hypo=1,
-        thres=None,
-    ):
-        # get number of sequences and
-        # get number of frames per sequence from test mapping
-        # (created while extracting the benchmark)
-        filename_test_mapping = os.path.join(gt_path, 'evaluate_tracking.seqmap.val')
-        self.n_frames = []
-        self.sequence_name = []
-        with open(filename_test_mapping, 'r') as fh:
-            for i, line in enumerate(fh):
-                fields = line.split(' ')
-                self.sequence_name.append('%04d' % int(fields[0]))
-                self.n_frames.append(int(fields[3]) - int(fields[2]) + 1)
-        fh.close()
-        self.n_sequences = i + 1
-
-        # class to evaluate, i.e. pedestrian or car
-        self.cls = cls
+        t_sha: str,
+        gt_path: str = './scripts/KITTI',
+        max_truncation: int = 0,
+        min_height: int = 25,
+        max_occlusion: int = 2,
+        cls: str = 'car',
+        eval_3diou: bool = True,
+        eval_2diou: bool = False,
+        num_hypo: int = 1,
+        thres: Union[float, None] = None,
+    ) -> None:
+        self.n_frames = list(SEQ_LENGTHS_NAME.values())
+        self.sequence_name = list(SEQ_LENGTHS_NAME)
+        self.n_sequences = len(self.sequence_name)
+        self.cls = cls  # class to evaluate, i.e. pedestrian or car
 
         # data and parameter
         self.gt_path = os.path.join(gt_path, 'label')
@@ -127,45 +141,39 @@ class TrackingEvaluation(object):
                 assert False
         else:
             self.min_overlap = thres
-        # print('min overlap creteria is %f' % self.min_overlap)
 
         self.max_truncation = max_truncation  # maximum truncation of an object for evaluation
         self.max_occlusion = max_occlusion  # maximum occlusion of an object for evaluation
         self.min_height = min_height  # minimum height of an object for evaluation
         self.n_sample_points = 500
 
-        # this should be enough to hold all groundtruth trajectories
+        # this should be enough to hold all ground-truth trajectories
         # is expanded if necessary and reduced in any case
-        self.gt_trajectories = [[] for x in range(self.n_sequences)]
-        self.ign_trajectories = [[] for x in range(self.n_sequences)]
+        self.gt_trajectories = [[] for _ in range(self.n_sequences)]
+        self.ign_trajectories = [[] for _ in range(self.n_sequences)]
+        self.scores: List[float] = []
+        self.ground_truth: List[List[List[TrackData]]] = []
+        self.dcareas: List[List[List[TrackData]]] = []
+        self.tracker: List[List[List[TrackData]]] = []
+        self.num_gt: int = 0
 
-    def loadGroundtruth(self):
+    def load_data(self, is_ground_truth: bool) -> bool:
         """
-        Helper function to load ground truth.
+        Helper function to load ground truth or tracking data.
         """
 
         try:
-            self._loadData(self.gt_path, cls=self.cls, loading_groundtruth=True)
+            if is_ground_truth:
+                self._load_data(self.gt_path, self.cls, is_ground_truth)
+            else:
+                self._load_data(self.t_path, self.cls, is_ground_truth)
         except IOError:
             return False
         return True
 
-    def loadTracker(self):
-        """
-        Helper function to load tracker data.
-        """
-
-        try:
-            if not self._loadData(self.t_path, cls=self.cls, loading_groundtruth=False):
-                return False
-        except IOError:
-            return False
-        return True
-
-    def _loadData(self, root_dir, cls, loading_groundtruth=False):
+    def _load_data(self, root_dir: str, cls: str, is_ground_truth: bool) -> bool:
         """
         Generic loader for ground truth and tracking data.
-        Use loadGroundtruth() or loadTracker() to load this data.
         Loads detections in KITTI format from textfiles.
         """
         # construct objectDetections object to hold detection data
@@ -176,12 +184,13 @@ class TrackingEvaluation(object):
         seq_data = []
         n_trajectories = 0
         n_trajectories_seq = []
+        classes = get_classes(cls)
         for seq, s_name in enumerate(self.sequence_name):
             filename = os.path.join(root_dir, '%s.txt' % s_name)
             f = open(filename, 'r')
 
             f_data = [
-                [] for x in range(self.n_frames[seq])
+                [] for _ in range(self.n_frames[seq])
             ]  # current set has only 1059 entries, sufficient length is checked anyway
             ids = []
             n_in_seq = 0
@@ -191,14 +200,6 @@ class TrackingEvaluation(object):
                 # (frame,tracklet_id,objectType,truncation,occlusion,alpha,x1,y1,x2,y2,h,w,l,X,Y,Z,ry)
                 line = line.strip()
                 fields = line.split(' ')
-                # classes that should be loaded (ignored neighboring classes)
-                if 'car' in cls.lower():
-                    classes = ['car', 'van']
-                elif 'pedestrian' in cls.lower():
-                    classes = ['pedestrian', 'person_sitting']
-                else:
-                    classes = [cls.lower()]
-                classes += ['dontcare']
                 if not any([s for s in classes if s in fields[2].lower()]):
                     continue
                 # get fields from table
@@ -220,14 +221,14 @@ class TrackingEvaluation(object):
                 t_data.z = float(fields[15])  # Z [m]
                 t_data.ry = float(fields[16])  # yaw angle [rad]
                 t_data.corners_3d_cam = None
-                if not loading_groundtruth:
+                if not is_ground_truth:
                     if len(fields) == 17:
                         t_data.score = -1
                     elif len(fields) == 18:
                         t_data.score = float(fields[17])  # detection score
                     else:
                         print('file is not in KITTI format')
-                        return
+                        return False
 
                 # do not consider objects marked as invalid
                 if t_data.track_id == -1 and t_data.obj_type != 'dontcare':
@@ -238,22 +239,17 @@ class TrackingEvaluation(object):
                 if idx >= len(f_data):
                     print('extend f_data', idx, len(f_data))
                     f_data += [[] for x in range(max(500, idx - len(f_data)))]
-                try:
-                    id_frame = (t_data.frame, t_data.track_id)
-                    if id_frame in id_frame_cache and not loading_groundtruth:
-                        print(
-                            'track ids are not unique for sequence %d: frame %d'
-                            % (seq, t_data.frame)
-                        )
-                        print('track id %d occured at least twice for this frame' % t_data.track_id)
-                        print('Exiting...')
-                        # continue # this allows to evaluate non-unique result files
-                        return False
-                    id_frame_cache.append(id_frame)
-                    f_data[t_data.frame].append(copy.copy(t_data))
-                except:
-                    print(len(f_data), idx)
-                    raise
+                id_frame = (t_data.frame, t_data.track_id)
+                if id_frame in id_frame_cache and not is_ground_truth:
+                    print(
+                        'track ids are not unique for sequence %d: frame %d' % (seq, t_data.frame)
+                    )
+                    print('track id %d occured at least twice for this frame' % t_data.track_id)
+                    print('Exiting...')
+                    # continue # this allows to evaluate non-unique result files
+                    return False
+                id_frame_cache.append(id_frame)
+                f_data[t_data.frame].append(copy.copy(t_data))
 
                 if t_data.track_id not in ids and t_data.obj_type != 'dontcare':
                     ids.append(t_data.track_id)
@@ -262,14 +258,14 @@ class TrackingEvaluation(object):
 
                 # check if uploaded data provides information for 2D and 3D evaluation
                 if (
-                    not loading_groundtruth
-                    and eval_2d is True
+                    not is_ground_truth
+                    and eval_2d
                     and (t_data.x1 == -1 or t_data.x2 == -1 or t_data.y1 == -1 or t_data.y2 == -1)
                 ):
                     eval_2d = False
                 if (
-                    not loading_groundtruth
-                    and eval_3d is True
+                    not is_ground_truth
+                    and eval_3d
                     and (t_data.x == -1000 or t_data.y == -1000 or t_data.z == -1000)
                 ):
                     eval_3d = False
@@ -279,7 +275,7 @@ class TrackingEvaluation(object):
             seq_data.append(f_data)
             f.close()
 
-        if not loading_groundtruth:
+        if not is_ground_truth:
             self.tracker = seq_data
             self.n_tr_trajectories = n_trajectories
             self.eval_2d = eval_2d
@@ -289,8 +285,8 @@ class TrackingEvaluation(object):
                 return False
         else:
             # split ground truth and DontCare areas
-            self.dcareas = []
-            self.groundtruth = []
+            self.dcareas.clear()
+            self.ground_truth.clear()
             for seq_idx in range(len(seq_data)):
                 seq_gt = seq_data[seq_idx]
                 s_g, s_dc = [], []
@@ -305,93 +301,14 @@ class TrackingEvaluation(object):
                     s_g.append(g)
                     s_dc.append(dc)
                 self.dcareas.append(s_dc)
-                self.groundtruth.append(s_g)
+                self.ground_truth.append(s_g)
             self.n_gt_seq = n_trajectories_seq
             self.n_gt_trajectories = n_trajectories
         return True
 
-    def getThresholds(self, scores, num_gt, num_sample_pts=NUM_SAMPLE_POINTS):
-        # based on score of true positive to discretize the recall
-        # not necessarily have data on all points due to not fully recall the results, all the results point has zero precision
-        # compute the recall based on the gt positives
-
-        # scores: the list of scores of the matched true positives
-
-        scores = np.array(scores)
-        scores.sort()
-        scores = scores[::-1]
-        current_recall = 0
-        thresholds = []
-        recalls = []
-        for i, score in enumerate(scores):
-            l_recall = (i + 1) / float(num_gt)
-            if i < (len(scores) - 1):
-                r_recall = (i + 2) / float(num_gt)
-            else:
-                r_recall = l_recall
-            if ((r_recall - current_recall) < (current_recall - l_recall)) and (
-                i < (len(scores) - 1)
-            ):
-                continue
-
-            thresholds.append(score)
-            recalls.append(current_recall)
-            current_recall += 1 / (num_sample_pts - 1.0)
-
-        return thresholds[1:], recalls[1:]  # throw the first one with 0 recall
-
-    def reset(self):
-        self.n_gt = (
-            0  # number of ground truth detections minus ignored false negatives and true positives
-        )
-        self.n_igt = 0  # number of ignored ground truth detections
-        self.n_tr = 0  # number of tracker detections minus ignored tracker detections
-        self.n_itr = 0  # number of ignored tracker detections
-        self.n_igttr = 0  # number of ignored ground truth detections where the corresponding associated tracker detection is also ignored
-
-        self.MOTA = 0
-        self.MOTP = 0
-        self.MOTAL = 0
-        self.MODA = 0
-        self.MODP = 0
-        self.MODP_t = []
-
-        self.recall = 0
-        self.precision = 0
-        self.F1 = 0
-        self.FAR = 0
-
-        self.total_cost = 0
-        self.itp = 0
-        self.tp = 0
-        self.fn = 0
-        self.ifn = 0
-        self.fp = 0
-
-        self.n_gts = []  # number of ground truth detections minus ignored false negatives and true positives PER SEQUENCE
-        self.n_igts = []  # number of ground ignored truth detections PER SEQUENCE
-        self.n_trs = []  # number of tracker detections minus ignored tracker detections PER SEQUENCE
-        self.n_itrs = []  # number of ignored tracker detections PER SEQUENCE
-
-        self.itps = []  # number of ignored true positives PER SEQUENCE
-        self.tps = []  # number of true positives including ignored true positives PER SEQUENCE
-        self.fns = []  # number of false negatives WITHOUT ignored false negatives PER SEQUENCE
-        self.ifns = []  # number of ignored false negatives PER SEQUENCE
-        self.fps = []  # above PER SEQUENCE
-
-        self.fragments = 0
-        self.id_switches = 0
-        self.MT = 0
-        self.PT = 0
-        self.ML = 0
-
-        self.gt_trajectories = [[] for x in range(self.n_sequences)]
-        self.ign_trajectories = [[] for x in range(self.n_sequences)]
-
-        return
-
-    def compute3rdPartyMetrics(self, threshold=-10000, recall_thres=1.0):
-        # def compute3rdPartyMetrics(self, threshold=3):
+    def compute_3rd_party_metrics(
+        self, threshold: float = -10000.0, recall_thres: float = 1.0
+    ) -> bool:
         """
         Computes the metrics defined in
             - Stiefelhagen 2008: Evaluating Multiple Object Tracking Performance: The CLEAR MOT Metrics
@@ -403,13 +320,13 @@ class TrackingEvaluation(object):
         # construct Munkres object for Hungarian Method association
         hm = Munkres()
         max_cost = 1e9
-        self.scores = list()
+        self.scores.clear()
 
         # go through all frames and associate ground truth and tracker results
-        # groundtruth and tracker contain lists for every single frame containing lists of KITTI format detections
+        # ground truth and tracker contain lists for every single frame containing lists of KITTI format detections
         fr, ids = 0, 0
-        for seq_idx in range(len(self.groundtruth)):
-            seq_gt = self.groundtruth[seq_idx]
+        for seq_idx in range(len(self.ground_truth)):
+            seq_gt = self.ground_truth[seq_idx]
             seq_dc = self.dcareas[seq_idx]  # don't care areas
             seq_tracker_before = self.tracker[seq_idx]
 
@@ -466,10 +383,10 @@ class TrackingEvaluation(object):
             n_trs = 0
 
             for f in range(len(seq_gt)):  # go through each frame
-                g = seq_gt[f]
-                dc = seq_dc[f]
+                g: List[TrackData] = seq_gt[f]
+                dc: List[TrackData] = seq_dc[f]
+                t: List[TrackData] = seq_tracker[f]
 
-                t = seq_tracker[f]
                 # counting total number of ground truth and tracker objects
                 self.n_gt += len(g)
                 self.n_tr += len(t)
@@ -489,12 +406,12 @@ class TrackingEvaluation(object):
                     gg.tracker = -1
                     gg.id_switch = 0
                     gg.fragmentation = 0
-                    cost_row = []
+                    cost_row: List[float] = []
                     for tt in t:
                         if self.eval_2diou:
                             c = 1 - box_overlap(gg, tt)
                         elif self.eval_3diou:
-                            c = 1 - iou(gg, tt, metric='iou_3d')
+                            c = 1 - iou(gg, tt, metric=MetricKind.IOU_3D)
                         else:
                             assert False, 'error'
 
@@ -505,7 +422,7 @@ class TrackingEvaluation(object):
                             cost_row.append(max_cost)  # = 1e9
                     cost_matrix.append(cost_row)
                     # all ground truth trajectories are initially not associated
-                    # extend groundtruth trajectories lists (merge lists)
+                    # extend ground-truth trajectories lists (merge lists)
                     seq_trajectories[gg.track_id].append(-1)
                     seq_ignored[gg.track_id].append(False)
 
@@ -521,7 +438,7 @@ class TrackingEvaluation(object):
                 tmpc = 0  # this will sum up the overlaps for all true positives
                 tmpcs = [0] * len(g)  # this will save the overlaps for all true positives
                 # the reason is that some true positives might be ignored
-                # later such that the corrsponding overlaps can
+                # later such that the corresponding overlaps can
                 # be subtracted from tmpc for MODP computation
 
                 # mapping for tracker ids and ground truth ids
@@ -572,6 +489,7 @@ class TrackingEvaluation(object):
                         tt.ignored = True
                         ignoredtrackers[tt.track_id] = 1
                         continue
+
                     for d in dc:
                         # as KITTI does not provide ground truth 3D box for DontCare objects, we have to use
                         # 2D IoU here and a threshold of 0.5 for 2D IoU.
@@ -986,6 +904,54 @@ class TrackingEvaluation(object):
         summary += '=' * 80
 
         return summary
+
+    def reset(self) -> None:
+        self.n_gt = (
+            0  # number of ground truth detections minus ignored false negatives and true positives
+        )
+        self.n_igt = 0  # number of ignored ground truth detections
+        self.n_tr = 0  # number of tracker detections minus ignored tracker detections
+        self.n_itr = 0  # number of ignored tracker detections
+        self.n_igttr = 0  # number of ignored ground truth detections where the corresponding associated tracker detection is also ignored
+
+        self.MOTA = 0
+        self.MOTP = 0
+        self.MOTAL = 0
+        self.MODA = 0
+        self.MODP = 0
+        self.MODP_t = []
+
+        self.recall = 0
+        self.precision = 0
+        self.F1 = 0
+        self.FAR = 0
+
+        self.total_cost = 0
+        self.itp = 0
+        self.tp = 0
+        self.fn = 0
+        self.ifn = 0
+        self.fp = 0
+
+        self.n_gts = []  # number of ground truth detections minus ignored false negatives and true positives PER SEQUENCE
+        self.n_igts = []  # number of ground ignored truth detections PER SEQUENCE
+        self.n_trs = []  # number of tracker detections minus ignored tracker detections PER SEQUENCE
+        self.n_itrs = []  # number of ignored tracker detections PER SEQUENCE
+
+        self.itps = []  # number of ignored true positives PER SEQUENCE
+        self.tps = []  # number of true positives including ignored true positives PER SEQUENCE
+        self.fns = []  # number of false negatives WITHOUT ignored false negatives PER SEQUENCE
+        self.ifns = []  # number of ignored false negatives PER SEQUENCE
+        self.fps = []  # above PER SEQUENCE
+
+        self.fragments = 0
+        self.id_switches = 0
+        self.MT = 0
+        self.PT = 0
+        self.ML = 0
+
+        self.gt_trajectories = [[] for x in range(self.n_sequences)]
+        self.ign_trajectories = [[] for x in range(self.n_sequences)]
 
     def printEntry(self, key, val, width=(70, 10)):
         """
