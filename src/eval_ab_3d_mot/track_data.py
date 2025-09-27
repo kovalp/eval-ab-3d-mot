@@ -2,8 +2,10 @@
 Utility class to load data.
 """
 
+from pure_ab_3d_mot.box import Box3D
 
-class TrackData:
+
+class TrackData(Box3D):
     def __init__(
         self,
         frame=-1,
@@ -28,6 +30,7 @@ class TrackData:
         """
         Constructor, initializes the object given the parameters.
         """
+        super().__init__(x, y, z, h, w, l, ry, score)
         self.frame = frame
         self.track_id = track_id
         self.obj_type = obj_type
@@ -38,14 +41,6 @@ class TrackData:
         self.y1 = y1
         self.x2 = x2
         self.y2 = y2
-        self.w = w
-        self.h = h
-        self.l = l
-        self.x = x
-        self.y = y
-        self.z = z
-        self.ry = ry
-        self.score = score
         self.ignored = False
         self.valid = False
         self.tracker = -1
