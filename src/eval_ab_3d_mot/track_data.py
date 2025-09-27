@@ -49,6 +49,7 @@ class TrackData:
         self.ignored = False
         self.valid = False
         self.tracker = -1
+        self.distance = 0.0
 
     def __repr__(self) -> str:
         return f'Track(id {self.track_id} frame {self.frame} x {self.x} y {self.y} z {self.z})'

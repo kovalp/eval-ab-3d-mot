@@ -26,7 +26,8 @@ ry: -10
 score: -1000
 ignored: False
 valid: False
-tracker: -1"""
+tracker: -1
+distance: 0.0"""
     assert str(t_data) == ref
 
 

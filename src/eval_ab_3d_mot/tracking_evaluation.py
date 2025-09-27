@@ -383,10 +383,10 @@ class TrackingEvaluation(object):
             n_trs = 0
 
             for f in range(len(seq_gt)):  # go through each frame
-                g = seq_gt[f]
-                dc = seq_dc[f]
+                g: List[TrackData] = seq_gt[f]
+                dc: List[TrackData] = seq_dc[f]
+                t: List[TrackData] = seq_tracker[f]
 
-                t = seq_tracker[f]
                 # counting total number of ground truth and tracker objects
                 self.n_gt += len(g)
                 self.n_tr += len(t)
@@ -489,6 +489,7 @@ class TrackingEvaluation(object):
                         tt.ignored = True
                         ignoredtrackers[tt.track_id] = 1
                         continue
+
                     for d in dc:
                         # as KITTI does not provide ground truth 3D box for DontCare objects, we have to use
                         # 2D IoU here and a threshold of 0.5 for 2D IoU.
