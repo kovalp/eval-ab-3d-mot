@@ -5,7 +5,7 @@ import math
 import os
 
 from collections import defaultdict
-from typing import List, Union
+from typing import Dict, List, Union
 
 from munkres import Munkres
 from pure_ab_3d_mot.dist_metrics import MetricKind
@@ -468,7 +468,7 @@ class TrackingEvaluation(object):
                 # associate tracker and DontCare areas
                 # ignore tracker in neighboring classes
                 nignoredtracker = 0  # number of ignored tracker detections
-                ignoredtrackers = dict()  # will associate the track_id with -1
+                ignoredtrackers: Dict[int, int] = dict()  # will associate the track_id with -1
                 # if it is not ignored and 1 if it is
                 # ignored;
                 # this is used to avoid double counting ignored

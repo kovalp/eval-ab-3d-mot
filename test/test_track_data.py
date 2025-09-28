@@ -27,7 +27,10 @@ y2: -1
 ignored: False
 valid: False
 tracker: -1
-distance: 0.0"""
+distance: 0.0
+fragmentation: 0
+id_switch: 0
+score: -1000"""
     assert str(t_data) == ref
 
 

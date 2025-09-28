@@ -45,6 +45,9 @@ class TrackData(Box3D):
         self.valid = False
         self.tracker = -1
         self.distance = 0.0
+        self.fragmentation = 0
+        self.id_switch = 0
+        self.score = score
 
     def __repr__(self) -> str:
         return f'Track(id {self.track_id} frame {self.frame} x {self.x} y {self.y} z {self.z})'
