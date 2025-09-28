@@ -12,6 +12,7 @@ from pure_ab_3d_mot.dist_metrics import MetricKind
 from pure_ab_3d_mot.iou import iou
 
 from .box_overlap import box_overlap
+from .print_entry import print_entry
 from .track_data import TrackData
 
 
@@ -487,6 +488,7 @@ class TrackingEvaluation(object):
                     ) and not tt.valid:
                         nignoredtracker += 1
                         tt.ignored = True
+
                         ignoredtrackers[tt.track_id] = 1
                         continue
 
@@ -494,6 +496,7 @@ class TrackingEvaluation(object):
                         # as KITTI does not provide ground truth 3D box for DontCare objects, we have to use
                         # 2D IoU here and a threshold of 0.5 for 2D IoU.
                         overlap = box_overlap(tt, d, 'a')
+                        print(overlap, tt.valid)
                         if overlap > 0.5 and not tt.valid:
                             tt.ignored = True
                             nignoredtracker += 1
@@ -534,7 +537,7 @@ class TrackingEvaluation(object):
                             # if the associated tracker detection is already ignored,
                             # we want to avoid double counting ignored detections
                             if ignoredtrackers[gg.tracker] > 0:
-                                nignoredpairs += 1
+                                nignoredpairs += 1  ## IDK how to get here...
 
                             # for computing MODP, the overlaps from ignored detections
                             # are subtracted
@@ -544,8 +547,8 @@ class TrackingEvaluation(object):
                 # the below might be confusion, check the comments in __init__
                 # to see what the individual statistics represent
 
-                # nignoredtp is already associated, but should ignored
-                # ignoredfn is already missed, but should ignored
+                # nignoredtp is already associated, but should be ignored
+                # ignoredfn is already missed, but should be ignored
 
                 # correct TP by number of ignored TP due to truncation
                 # ignored TP are shown as tracked in visualization
@@ -568,12 +571,12 @@ class TrackingEvaluation(object):
                 # ground truth objects that are both ignored
                 self.n_igttr += nignoredpairs
 
-                # false negatives = associated gt bboxes exceding association threshold + non-associated gt bboxes
+                # false negatives = associated gt bboxes exceeding association threshold + non-associated gt bboxes
                 #
 
                 # explanation of fn
                 # the original fn is in the matched gt where the score is not high enough
-                # len(g) - len(association amtrix), means that some gt is not matched in hungarian
+                # len(g) - len(association matrix), means that some gt is not matched in hungarian
                 # further - ignoredfn, means that some gt can be ignored
 
                 tmpfn += len(g) - len(association_matrix) - ignoredfn
@@ -598,7 +601,7 @@ class TrackingEvaluation(object):
                 seqitr += nignoredtracker
 
                 # sanity checks
-                # - the number of true positives minues ignored true positives
+                # - the number of true positives minus ignored true positives
                 #   should be greater or equal to 0
                 # - the number of false negatives should be greater or equal to 0
                 # - the number of false positives needs to be greater or equal to 0
@@ -614,7 +617,7 @@ class TrackingEvaluation(object):
                 #   of ignored detection sin nignoredtp and nignoredtracker
                 if tmptp < 0:
                     print(tmptp, nignoredtp)
-                    raise NameError('Something went wrong! TP is negative')
+                    raise NameError('Something went wrong! TP is negative')  # impossible?
                 if tmpfn < 0:
                     print(tmpfn, len(g), len(association_matrix), ignoredfn, nignoredpairs)
                     raise NameError('Something went wrong! FN is negative')
@@ -637,7 +640,7 @@ class TrackingEvaluation(object):
                     print(len(association_matrix), association_matrix)
                     raise NameError('Something went wrong! nTracker is not TP+FP')
 
-                # check for id switches or Fragmentations
+                # check for id switches or fragmentation
                 # frag will be more than id switch, switch happens only when id is different but detection exists
                 # frag happens when id switch or detection is missing
                 for i, tt in enumerate(this_ids[0]):
@@ -646,9 +649,7 @@ class TrackingEvaluation(object):
                     if tt in last_ids[0]:
                         idx = last_ids[0].index(tt)
                         tid = this_ids[1][i]  # id in current tracker corresponding to the gt tt
-                        lid = last_ids[1][
-                            idx
-                        ]  # id in last frame tracker corresponding to the gt tt
+                        lid = last_ids[1][idx]  # id in last frame tracker corresp. to the gt tt
                         if tid != lid and lid != -1 and tid != -1:
                             if g[i].truncation < self.max_truncation:
                                 g[i].id_switch = 1
@@ -813,7 +814,7 @@ class TrackingEvaluation(object):
         self.num_gt = self.tp + self.fn
         return True
 
-    def createSummary_details(self):
+    def create_summary_details(self):
         """
         Generate and mail a summary of the results.
         If mailpy.py is present, the summary is instead printed.
@@ -822,50 +823,48 @@ class TrackingEvaluation(object):
         summary = ''
 
         summary += 'evaluation: best results with single threshold'.center(80, '=') + '\n'
-        summary += self.printEntry('Multiple Object Tracking Accuracy (MOTA)', self.MOTA) + '\n'
+        summary += print_entry('Multiple Object Tracking Accuracy (MOTA)', self.MOTA) + '\n'
+        summary += print_entry('Multiple Object Tracking Precision (MOTP)', float(self.MOTP)) + '\n'
+        summary += print_entry('Multiple Object Tracking Accuracy (MOTAL)', self.MOTAL) + '\n'
+        summary += print_entry('Multiple Object Detection Accuracy (MODA)', self.MODA) + '\n'
         summary += (
-            self.printEntry('Multiple Object Tracking Precision (MOTP)', float(self.MOTP)) + '\n'
-        )
-        summary += self.printEntry('Multiple Object Tracking Accuracy (MOTAL)', self.MOTAL) + '\n'
-        summary += self.printEntry('Multiple Object Detection Accuracy (MODA)', self.MODA) + '\n'
-        summary += (
-            self.printEntry('Multiple Object Detection Precision (MODP)', float(self.MODP)) + '\n'
+            print_entry('Multiple Object Detection Precision (MODP)', float(self.MODP)) + '\n'
         )
         summary += '\n'
-        summary += self.printEntry('Recall', self.recall) + '\n'
-        summary += self.printEntry('Precision', self.precision) + '\n'
-        summary += self.printEntry('F1', self.F1) + '\n'
-        summary += self.printEntry('False Alarm Rate', self.FAR) + '\n'
+        summary += print_entry('Recall', self.recall) + '\n'
+        summary += print_entry('Precision', self.precision) + '\n'
+        summary += print_entry('F1', self.F1) + '\n'
+        summary += print_entry('False Alarm Rate', self.FAR) + '\n'
         summary += '\n'
-        summary += self.printEntry('Mostly Tracked', self.MT) + '\n'
-        summary += self.printEntry('Partly Tracked', self.PT) + '\n'
-        summary += self.printEntry('Mostly Lost', self.ML) + '\n'
+        summary += print_entry('Mostly Tracked', self.MT) + '\n'
+        summary += print_entry('Partly Tracked', self.PT) + '\n'
+        summary += print_entry('Mostly Lost', self.ML) + '\n'
         summary += '\n'
-        summary += self.printEntry('True Positives', self.tp) + '\n'
+        summary += print_entry('True Positives', self.tp) + '\n'
         # summary += self.printEntry("True Positives per Sequence", self.tps) + "\n"
-        summary += self.printEntry('Ignored True Positives', self.itp) + '\n'
+        summary += print_entry('Ignored True Positives', self.itp) + '\n'
         # summary += self.printEntry("Ignored True Positives per Sequence", self.itps) + "\n"
-        summary += self.printEntry('False Positives', self.fp) + '\n'
+        summary += print_entry('False Positives', self.fp) + '\n'
         # summary += self.printEntry("False Positives per Sequence", self.fps) + "\n"
-        summary += self.printEntry('False Negatives', self.fn) + '\n'
+        summary += print_entry('False Negatives', self.fn) + '\n'
         # summary += self.printEntry("False Negatives per Sequence", self.fns) + "\n"
-        summary += self.printEntry('Ignored False Negatives', self.ifn) + '\n'
+        summary += print_entry('Ignored False Negatives', self.ifn) + '\n'
         # summary += self.printEntry("Ignored False Negatives per Sequence", self.ifns) + "\n"
         # summary += self.printEntry("Missed Targets", self.fn) + "\n"
-        summary += self.printEntry('ID-switches', self.id_switches) + '\n'
-        summary += self.printEntry('Fragmentations', self.fragments) + '\n'
+        summary += print_entry('ID-switches', self.id_switches) + '\n'
+        summary += print_entry('Fragmentations', self.fragments) + '\n'
         summary += '\n'
-        summary += self.printEntry('Ground Truth Objects (Total)', self.n_gt + self.n_igt) + '\n'
+        summary += print_entry('Ground Truth Objects (Total)', self.n_gt + self.n_igt) + '\n'
         # summary += self.printEntry("Ground Truth Objects (Total) per Sequence", self.n_gts) + "\n"
-        summary += self.printEntry('Ignored Ground Truth Objects', self.n_igt) + '\n'
+        summary += print_entry('Ignored Ground Truth Objects', self.n_igt) + '\n'
         # summary += self.printEntry("Ignored Ground Truth Objects per Sequence", self.n_igts) + "\n"
-        summary += self.printEntry('Ground Truth Trajectories', self.n_gt_trajectories) + '\n'
+        summary += print_entry('Ground Truth Trajectories', self.n_gt_trajectories) + '\n'
         summary += '\n'
-        summary += self.printEntry('Tracker Objects (Total)', self.n_tr) + '\n'
+        summary += print_entry('Tracker Objects (Total)', self.n_tr) + '\n'
         # summary += self.printEntry("Tracker Objects (Total) per Sequence", self.n_trs) + "\n"
-        summary += self.printEntry('Ignored Tracker Objects', self.n_itr) + '\n'
+        summary += print_entry('Ignored Tracker Objects', self.n_itr) + '\n'
         # summary += self.printEntry("Ignored Tracker Objects per Sequence", self.n_itrs) + "\n"
-        summary += self.printEntry('Tracker Trajectories', self.n_tr_trajectories) + '\n'
+        summary += print_entry('Tracker Trajectories', self.n_tr_trajectories) + '\n'
         # summary += "\n"
         # summary += self.printEntry("Ignored Tracker Objects with Associated Ignored Ground Truth Objects", self.n_igttr) + "\n"
         summary += '=' * 80
@@ -953,29 +952,13 @@ class TrackingEvaluation(object):
         self.gt_trajectories = [[] for x in range(self.n_sequences)]
         self.ign_trajectories = [[] for x in range(self.n_sequences)]
 
-    def printEntry(self, key, val, width=(70, 10)):
-        """
-        Pretty print an entry in a table fashion.
-        """
-
-        s_out = key.ljust(width[0])
-        if isinstance(val, int):
-            s = '%%%dd' % width[1]
-            s_out += s % val
-        elif isinstance(val, float):
-            s = '%%%d.4f' % (width[1])
-            s_out += s % val
-        else:
-            s_out += ('%s' % val).rjust(width[1])
-        return s_out
-
     def saveToStats(self, dump, threshold=None, recall=None):
         """
         Save the statistics in a whitespace separate file.
         """
 
         if threshold is None:
-            summary = self.createSummary_details()
+            summary = self.create_summary_details()
         else:
             summary = self.createSummary_simple(threshold, recall)
         print(summary)  # mail or print the summary.
