@@ -14,4 +14,3 @@ def test_dc_is_loose(te_dc_is_loose: TrackingEvaluation) -> None:
     assert te_dc_is_loose.F1 == pytest.approx(0.666666666666666)
     assert te_dc_is_loose.recall == pytest.approx(0.5)
     assert te_dc_is_loose.precision == pytest.approx(1.0)
-
