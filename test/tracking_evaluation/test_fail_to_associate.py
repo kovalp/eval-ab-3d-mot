@@ -9,10 +9,7 @@ from eval_ab_3d_mot.core.tracking_evaluation import TrackingEvaluation
 
 @pytest.fixture
 def te_fail_associate(files_dir: Path) -> TrackingEvaluation:
-    te = TrackingEvaluation('my-sha', gt_path='kitti-root')
-    te.sequence_name = ['fail-associate']
-    te.n_frames = [1]
-    te.n_sequences = 1
+    te = TrackingEvaluation('my-sha', {'fail-associate': 1})
     te.t_path = str(files_dir / 'kitti/tracking/training')
     assert te.load_data(False)
 

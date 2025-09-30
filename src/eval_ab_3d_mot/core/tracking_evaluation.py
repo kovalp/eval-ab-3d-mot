@@ -74,25 +74,26 @@ class TrackingEvaluation(object):
     def __init__(
         self,
         t_sha: str,
-        gt_path: str = './scripts/KITTI',
+        seq_lengths_name: Dict[str, int],
+        ann_root: str = './scripts/KITTI',
+        res_root: str = './results/KITTI',
         max_truncation: int = 0,
         min_height: int = 25,
         max_occlusion: int = 2,
         cls: str = 'car',
         eval_3diou: bool = True,
         eval_2diou: bool = False,
-        num_hypo: int = 1,
         thres: Union[float, None] = None,
     ) -> None:
-        self.n_frames: List[int] = list(SEQ_LENGTHS_NAME.values())
-        self.sequence_name = list(SEQ_LENGTHS_NAME)
+        self.n_frames: List[int] = list(seq_lengths_name.values())
+        self.sequence_name = list(seq_lengths_name)
         self.n_sequences = len(self.sequence_name)
         self.cls = cls  # class to evaluate, i.e. pedestrian or car
 
         # data and parameter
-        self.gt_path = os.path.join(gt_path, 'label')
+        self.gt_path = os.path.join(ann_root, 'label')
         self.t_sha = t_sha
-        self.t_path = os.path.join('./results/KITTI', t_sha, 'data_%d' % (int(num_hypo) - 1))
+        self.t_path = os.path.join(res_root, t_sha, 'data_0')
 
         # statistics and numbers for evaluation
         self.n_gt = (
@@ -174,13 +175,10 @@ class TrackingEvaluation(object):
         Helper function to load ground truth or tracking data.
         """
 
-        try:
-            if is_ground_truth:
-                self._load_data(self.gt_path, self.cls, is_ground_truth)
-            else:
-                self._load_data(self.t_path, self.cls, is_ground_truth)
-        except IOError:
-            return False
+        if is_ground_truth:
+            self._load_data(self.gt_path, self.cls, is_ground_truth)
+        else:
+            self._load_data(self.t_path, self.cls, is_ground_truth)
         return True
 
     def _load_data(self, root_dir: str, cls: str, is_ground_truth: bool) -> bool:
@@ -294,6 +292,7 @@ class TrackingEvaluation(object):
             self.eval_3d = eval_3d
             self.n_tr_seq = n_trajectories_seq
             if self.n_tr_trajectories == 0:
+                print('not is_ground_truth')
                 return False
         else:
             # split ground truth and DontCare areas

@@ -1,60 +1,61 @@
 """."""
 
 import os
-import sys
+
+from typing import Dict, Sequence, Union
 
 from eval_ab_3d_mot.core.tracking_evaluation import TrackingEvaluation
 
+from .raise_if_sick import raise_if_sick
 from .stat import Stat
 from .thresholds import get_thresholds
 
 
-def evaluate(result_sha, num_hypo, eval_3diou, eval_2diou, thres):
+def evaluate(
+    result_sha: str,
+    eval_3diou: bool,
+    eval_2diou: bool,
+    threshold: Union[float, None],
+    ann_root: str,
+    res_root: str,
+    seq_lengths_name: Dict[str, int],
+    target_classes: Sequence[str],
+) -> bool:
     """
     Entry point for evaluation, will load the data and start evaluation for
     CAR and PEDESTRIAN if available.
     """
 
     classes = []
-    # for c in ("car", "pedestrian", "cyclist"):
-    for c in ('cyclist', 'pedestrian', 'car'):
+    for c in target_classes:
         e = TrackingEvaluation(
-            t_sha=result_sha,
+            result_sha,
+            seq_lengths_name,
+            ann_root=ann_root,
+            res_root=res_root,
             cls=c,
             eval_3diou=eval_3diou,
             eval_2diou=eval_2diou,
-            num_hypo=num_hypo,
-            thres=thres,
+            thres=threshold,
         )
         # load tracker data and check provided classes
         try:
-            if not e.load_data(is_ground_truth=False):
-                continue
+            e.load_data(is_ground_truth=False)
             print('Loading Results - Success')
             print('Evaluate Object Class: %s' % c.upper())
             classes.append(c)
-        except:  # noqa: E722
+        except IOError as exception:  # noqa: E722
             print('Feel free to contact us (lenz@kit.edu), if you receive this error message:')
             print('   Caught exception while loading result data.')
+            print(exception)
             break
-        # load groundtruth data for this class
-        if not e.load_data(is_ground_truth=True):
-            raise ValueError('Ground truth not found.')
-        print('Loading Groundtruth - Success')
+        e.load_data(is_ground_truth=True)  # load ground-truth data for this class
         # sanity checks
-        if len(e.ground_truth) != len(e.tracker):
-            print(
-                'The uploaded data does not provide results for every sequence: %d vs %d'
-                % (len(e.ground_truth), len(e.tracker))
-            )
-            return False
+        raise_if_sick(len(e.ground_truth), len(e.tracker))
         print('Loaded %d Sequences.' % len(e.ground_truth))
         print('Start Evaluation...')
 
-        if eval_3diou:
-            suffix = 'eval3D'
-        else:
-            suffix = 'eval2D'
+        suffix = 'eval_3d' if eval_3diou else 'eval_2d'
         filename = os.path.join(e.t_path, '../summary_%s_average_%s.txt' % (c, suffix))
         dump = open(filename, 'w+')
         stat_meter = Stat(t_sha=result_sha, cls=c, suffix=suffix)
@@ -101,37 +102,3 @@ def evaluate(result_sha, num_hypo, eval_3diou, eval_2diou, thres):
         return False
     print('Thank you for participating in our benchmark!')
     return True
-
-
-def main() -> None:
-    # check for correct number of arguments. if user_sha and email are not supplied,
-    # no notification email is sent (this option is used for auto-updates)
-    if len(sys.argv) != 3 and len(sys.argv) != 4 and len(sys.argv) != 5:
-        print(
-            'Usage: python3 scripts/KITTI/evaluate.py result_sha num_hypothesis(e.g., 1) dimension(e.g., 2D or 3D) thres(e.g., 0.25)'
-        )
-        sys.exit(1)
-
-    # get unique sha key of submitted results
-    result_sha = sys.argv[1]
-    num_hypo = sys.argv[2]
-    #
-    if len(sys.argv) >= 4:
-        if sys.argv[3] == '2D':
-            eval_3diou, eval_2diou = False, True  # eval 2d
-        elif sys.argv[3] == '3D':
-            eval_3diou, eval_2diou = True, False  # eval 3d
-        else:
-            print(
-                'Usage: python3 scripts/KITTI/evaluate.py result_sha num_hypothesis(e.g., 1) dimension(e.g., 2D or 3D) thres(e.g., 0.25)'
-            )
-            sys.exit(1)
-        if len(sys.argv) == 5:
-            thres = float(sys.argv[4])
-        else:
-            thres = None
-    else:
-        eval_3diou, eval_2diou = True, False  # eval 3d
-        thres = None
-
-    evaluate(result_sha, num_hypo, eval_3diou, eval_2diou, thres)
