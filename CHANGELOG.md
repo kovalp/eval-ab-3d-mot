@@ -16,3 +16,4 @@
   - Simplify arguments of the `TrackingEvaluation.load_data`.
   - Test `TrackingEvaluation.reset()`.
   - Start testing `TrackingEvaluation.compute_3d_party_metrics`.
+  - Tested all, many by defining smaller functions.
