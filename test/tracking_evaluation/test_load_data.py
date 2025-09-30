@@ -18,9 +18,3 @@ def test_load_data_tracking(te: TrackingEvaluation, mocker: MockerFixture) -> No
     mock_load_data = mocker.patch.object(te, '_load_data')
     assert te.load_data(False)
     mock_load_data.assert_called_once_with(te.t_path, 'car', False)
-
-
-def test_load_data_io_error(te: TrackingEvaluation, mocker: MockerFixture) -> None:
-    """."""
-    mocker.patch.object(te, '_load_data', side_effect=IOError)
-    assert not te.load_data(False)

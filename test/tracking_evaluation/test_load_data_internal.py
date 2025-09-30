@@ -79,12 +79,14 @@ def test_dynamic_extension(te: TrackingEvaluation, files_dir: Path) -> None:
 def test_tracking_not_unique_ids(te: TrackingEvaluation) -> None:
     """."""
     te.sequence_name = ['0012-not-unique-ids']
+    te.n_frames = [3]
     assert not te._load_data(te.t_path, 'car', False)
 
 
 def test_trigger_no_2d(te: TrackingEvaluation) -> None:
     """."""
     te.sequence_name = ['0012-no-2d']
+    te.n_frames = [3]
     assert te._load_data(te.t_path, 'car', False)
     assert not te.eval_2d
 
@@ -92,6 +94,7 @@ def test_trigger_no_2d(te: TrackingEvaluation) -> None:
 def test_trigger_no_3d(te: TrackingEvaluation) -> None:
     """."""
     te.sequence_name = ['0012-no-3d']
+    te.n_frames = [3]
     assert te._load_data(te.t_path, 'car', False)
     assert not te.eval_3d
 
@@ -99,4 +102,5 @@ def test_trigger_no_3d(te: TrackingEvaluation) -> None:
 def test_trigger_no_trajectories(te: TrackingEvaluation) -> None:
     """."""
     te.sequence_name = ['0012-17']
+    te.n_frames = [3]
     assert not te._load_data(te.t_path, 'bogus-class', False)
