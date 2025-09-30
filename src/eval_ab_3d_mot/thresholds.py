@@ -18,20 +18,18 @@ def get_thresholds(
 
     scores = np.array(scores)
     scores.sort()
-    scores = scores[::-1]
+    scores: np.ndarray = scores[::-1]
     current_recall = 0
     thresholds = []
     recalls = []
+    last_idx = len(scores) - 1
     for i, score in enumerate(scores):
-        l_recall = (i + 1) / float(num_gt)
-        if i < (len(scores) - 1):
-            r_recall = (i + 2) / float(num_gt)
-        else:
-            r_recall = l_recall
-        if ((r_recall - current_recall) < (current_recall - l_recall)) and (i < (len(scores) - 1)):
+        l_recall = (i + 1) / num_gt
+        r_recall = (i + 2) / num_gt if i < last_idx else l_recall
+        if (r_recall - current_recall) < (current_recall - l_recall) and i < last_idx:
             continue
 
-        thresholds.append(score)
+        thresholds.append(float(score))
         recalls.append(current_recall)
         current_recall += 1 / (num_sample_pts - 1.0)
 
