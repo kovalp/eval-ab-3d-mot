@@ -2,7 +2,7 @@
 
 import pytest
 
-from eval_ab_3d_mot.tracking_evaluation import TrackingEvaluation
+from eval_ab_3d_mot.core.tracking_evaluation import TrackingEvaluation
 
 
 def test_empty(te: TrackingEvaluation) -> None:

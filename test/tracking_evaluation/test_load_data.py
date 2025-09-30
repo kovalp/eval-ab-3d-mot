@@ -2,7 +2,7 @@
 
 from pytest_mock import MockerFixture
 
-from eval_ab_3d_mot.tracking_evaluation import TrackingEvaluation
+from eval_ab_3d_mot.core.tracking_evaluation import TrackingEvaluation
 
 
 def test_load_data_gt(te: TrackingEvaluation, mocker: MockerFixture) -> None:

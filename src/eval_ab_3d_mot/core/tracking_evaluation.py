@@ -11,9 +11,19 @@ from munkres import Munkres
 from pure_ab_3d_mot.dist_metrics import MetricKind
 from pure_ab_3d_mot.iou import iou
 
-from .box_overlap import box_overlap
+from eval_ab_3d_mot.box_overlap import box_overlap
+from eval_ab_3d_mot.track_data import TrackData
+
+from .bump_num_ignored_pairs import bump_num_ignored_pairs
+from .filter_low_confidence import filter_low_confidence
+from .internal_trouble_precision import raise_if_trouble_fp
+from .internal_trouble_recall import raise_if_trouble_fn
+from .internal_troubles_negative import (
+    raise_if_negative_fn,
+    raise_if_negative_fp,
+    raise_if_negative_tp,
+)
 from .print_entry import print_entry
-from .track_data import TrackData
 
 
 SEQ_LENGTHS_NAME = {
@@ -57,7 +67,7 @@ class TrackingEvaluation(object):
     recall         - recall = percentage of detected targets
     precision      - precision = percentage of correctly detected targets
     FAR            - number of false alarms per frame
-    falsepositives - number of false positives (FP)
+    false positives - number of false positives (FP)
     missed         - number of missed targets (FN)
     """
 
@@ -74,7 +84,7 @@ class TrackingEvaluation(object):
         num_hypo: int = 1,
         thres: Union[float, None] = None,
     ) -> None:
-        self.n_frames = list(SEQ_LENGTHS_NAME.values())
+        self.n_frames: List[int] = list(SEQ_LENGTHS_NAME.values())
         self.sequence_name = list(SEQ_LENGTHS_NAME)
         self.n_sequences = len(self.sequence_name)
         self.cls = cls  # class to evaluate, i.e. pedestrian or car
@@ -104,12 +114,13 @@ class TrackingEvaluation(object):
         self.MOTP = 0
         self.MOTAL = 0
         self.MODA = 0
-        self.MODP = 0
+        self.MODP: Union[str, float] = 0.0
         self.MODP_t = []
+        self.sMOTA = 0.0
         self.recall = 0
         self.precision = 0
         self.F1 = 0
-        self.FAR = 0
+        self.FAR: Union[str, float] = 0.0
         self.total_cost = 0
         self.itp = 0  # number of ignored true positives
         self.itps = []  # number of ignored true positives PER SEQUENCE
@@ -325,7 +336,7 @@ class TrackingEvaluation(object):
 
         # go through all frames and associate ground truth and tracker results
         # ground truth and tracker contain lists for every single frame containing lists of KITTI format detections
-        fr, ids = 0, 0
+        f = 0
         for seq_idx in range(len(self.ground_truth)):
             seq_gt = self.ground_truth[seq_idx]
             seq_dc = self.dcareas[seq_idx]  # don't care areas
@@ -344,13 +355,7 @@ class TrackingEvaluation(object):
                         tracker_id_score[id_tmp] = list()
                     tracker_id_score[id_tmp].append(score_tmp)
 
-            id_average_score = dict()
-            to_delete_id = list()
-            for track_id, score_list in tracker_id_score.items():
-                average_score = sum(score_list) / float(len(score_list))
-                id_average_score[track_id] = average_score
-                if average_score < threshold:
-                    to_delete_id.append(track_id)
+            id_average_score, to_delete_id = filter_low_confidence(tracker_id_score, threshold)
 
             seq_tracker = list()
             for frame in range(len(seq_tracker_before)):
@@ -496,7 +501,6 @@ class TrackingEvaluation(object):
                         # as KITTI does not provide ground truth 3D box for DontCare objects, we have to use
                         # 2D IoU here and a threshold of 0.5 for 2D IoU.
                         overlap = box_overlap(tt, d, 'a')
-                        print(overlap, tt.valid)
                         if overlap > 0.5 and not tt.valid:
                             tt.ignored = True
                             nignoredtracker += 1
@@ -536,8 +540,9 @@ class TrackingEvaluation(object):
 
                             # if the associated tracker detection is already ignored,
                             # we want to avoid double counting ignored detections
-                            if ignoredtrackers[gg.tracker] > 0:
-                                nignoredpairs += 1  ## IDK how to get here...
+                            nignoredpairs = bump_num_ignored_pairs(
+                                ignoredtrackers[gg.tracker], nignoredpairs
+                            )
 
                             # for computing MODP, the overlaps from ignored detections
                             # are subtracted
@@ -581,15 +586,12 @@ class TrackingEvaluation(object):
 
                 tmpfn += len(g) - len(association_matrix) - ignoredfn
                 self.fn += len(g) - len(association_matrix) - ignoredfn
-                # self.fn += len(g)-len(association_matrix)
                 self.ifn += ignoredfn
 
                 # false positives = tracker bboxes - associated tracker bboxes
                 # mismatches (mme_t)
                 tmpfp += len(t) - tmptp - nignoredtracker - nignoredtp + nignoredpairs
                 self.fp += len(t) - tmptp - nignoredtracker - nignoredtp + nignoredpairs
-                # tmpfp   = len(t) - tmptp - nignoredtp # == len(t) - (tp - ignoredtp) - ignoredtp
-                # self.fp += len(t) - tmptp - nignoredtp
 
                 # update sequence data
                 seqtp += tmptp
@@ -614,51 +616,47 @@ class TrackingEvaluation(object):
                 #   plus the number of ignored tracker detections should
                 #   match the total number of tracker detections; note that
                 #   nignoredpairs is subtracted here to avoid double counting
-                #   of ignored detection sin nignoredtp and nignoredtracker
-                if tmptp < 0:
-                    print(tmptp, nignoredtp)
-                    raise NameError('Something went wrong! TP is negative')  # impossible?
-                if tmpfn < 0:
-                    print(tmpfn, len(g), len(association_matrix), ignoredfn, nignoredpairs)
-                    raise NameError('Something went wrong! FN is negative')
-                if tmpfp < 0:
-                    print(tmpfp, len(t), tmptp, nignoredtracker, nignoredtp, nignoredpairs)
-                    raise NameError('Something went wrong! FP is negative')
-                if tmptp + tmpfn != len(g) - ignoredfn - nignoredtp:
-                    print('seqidx', seq_idx)
-                    print('frame ', f)
-                    print('TP    ', tmptp)
-                    print('FN    ', tmpfn)
-                    print('FP    ', tmpfp)
-                    print('nGT   ', len(g))
-                    print('nAss  ', len(association_matrix))
-                    print('ign GT', ignoredfn)
-                    print('ign TP', nignoredtp)
-                    raise NameError('Something went wrong! nGroundtruth is not TP+FN')
-                if tmptp + tmpfp + nignoredtp + nignoredtracker - nignoredpairs != len(t):
-                    print(seq_idx, f, len(t), tmptp, tmpfp)
-                    print(len(association_matrix), association_matrix)
-                    raise NameError('Something went wrong! nTracker is not TP+FP')
+                #   of ignored detections in nignoredtp and nignoredtracker
+                raise_if_negative_tp(tmptp, nignoredtp)
+                raise_if_negative_fn(
+                    tmpfn, len(g), len(association_matrix), ignoredfn, nignoredpairs
+                )
+                raise_if_negative_fp(
+                    tmpfp, len(t), tmptp, nignoredtracker, nignoredtp, nignoredpairs
+                )
+                raise_if_trouble_fn(
+                    tmptp,
+                    tmpfn,
+                    len(g),
+                    ignoredfn,
+                    nignoredtp,
+                    tmpfp,
+                    seq_idx,
+                    f,
+                    association_matrix,
+                )
+                raise_if_trouble_fp(
+                    tmptp,
+                    tmpfp,
+                    nignoredtp,
+                    nignoredtracker,
+                    nignoredpairs,
+                    len(t),
+                    seq_idx,
+                    f,
+                    association_matrix,
+                )
 
                 # check for id switches or fragmentation
                 # frag will be more than id switch, switch happens only when id is different but detection exists
                 # frag happens when id switch or detection is missing
                 for i, tt in enumerate(this_ids[0]):
-                    # print(i)
-                    # print(tt)
                     if tt in last_ids[0]:
                         idx = last_ids[0].index(tt)
                         tid = this_ids[1][i]  # id in current tracker corresponding to the gt tt
                         lid = last_ids[1][idx]  # id in last frame tracker corresp. to the gt tt
-                        if tid != lid and lid != -1 and tid != -1:
-                            if g[i].truncation < self.max_truncation:
-                                g[i].id_switch = 1
-                                ids += 1
-                        if tid != lid and lid != -1:
-                            if g[i].truncation < self.max_truncation:
-                                g[i].fragmentation = 1
-                                fr += 1
-
+                        g[i].bump_id_switch(tid, lid, self.max_truncation)
+                        g[i].bump_fragmentation(tid, lid, self.max_truncation)
                 # save current index
                 last_ids = this_ids
                 # compute MOTP_t
@@ -684,13 +682,25 @@ class TrackingEvaluation(object):
             self.n_itrs.append(seqitr)
 
         # compute MT/PT/ML, fragments, idswitches for all groundtruth trajectories
+        n_ignored_tr_total = self.bump_clear_mot(f)
+        self.compute_mt_ml_pt(n_ignored_tr_total)
+        self.compute_f1()
+        self.compute_far()
+        self.compute_clear_mot(recall_thres)
+        self.compute_motp()
+        self.compute_motal()
+        self.compute_modp()
+        self.num_gt = self.tp + self.fn
+        return True
+
+    def bump_clear_mot(self, f: int) -> int:
+        # compute MT/PT/ML, fragments, idswitches for all groundtruth trajectories
         n_ignored_tr_total = 0
         for seq_idx, (seq_trajectories, seq_ignored) in enumerate(
             zip(self.gt_trajectories, self.ign_trajectories)
         ):
             if len(seq_trajectories) == 0:
                 continue
-            tmpMT, tmpML, tmpPT, tmpId_switches, tmpFragments = [0] * 5
             n_ignored_tr = 0
             for g, ign_g in zip(seq_trajectories.values(), seq_ignored.values()):
                 # all frames of this gt trajectory are ignored
@@ -700,57 +710,51 @@ class TrackingEvaluation(object):
                     continue
                 # all frames of this gt trajectory are not assigned to any detections
                 if all([this == -1 for this in g]):
-                    tmpML += 1
                     self.ML += 1
                     continue
                 # compute tracked frames in trajectory
-                last_id = g[0]
+                last_id: int = g[0]
                 # first detection (necessary to be in gt_trajectories) is always tracked
                 tracked = 1 if g[0] >= 0 else 0
                 lgt = 0 if ign_g[0] else 1
-                for f in range(1, len(g)):
+                for f in range(1, len(g)):  #!!! rather terrible use of `f` here
                     if ign_g[f]:
                         last_id = -1
                         continue
                     lgt += 1
-                    if last_id != g[f] and last_id != -1 and g[f] != -1 and g[f - 1] != -1:
-                        tmpId_switches += 1
-                        self.id_switches += 1
-                    if (
-                        f < len(g) - 1
-                        and g[f - 1] != g[f]
-                        and last_id != -1
-                        and g[f] != -1
-                        and g[f + 1] != -1
-                    ):
-                        tmpFragments += 1
-                        self.fragments += 1
+                    self.bump_id_switches(g, f, last_id)
+                    self.bump_fragments(g, f, last_id)
                     if g[f] != -1:
                         tracked += 1
                         last_id = g[f]
                 # handle last frame; tracked state is handled in for loop (g[f]!=-1)
-                if (
-                    len(g) > 1
-                    and g[f - 1] != g[f]
-                    and last_id != -1
-                    and g[f] != -1
-                    and not ign_g[f]
-                ):
-                    tmpFragments += 1
-                    self.fragments += 1
+                self.handle_last_frame(g, f, ign_g, last_id)
 
-                # compute MT/PT/ML
                 tracking_ratio = tracked / float(len(g) - sum(ign_g))
-                if tracking_ratio > 0.8:
-                    tmpMT += 1
-                    self.MT += 1
-                elif tracking_ratio < 0.2:
-                    tmpML += 1
-                    self.ML += 1
-                else:  # 0.2 <= tracking_ratio <= 0.8
-                    tmpPT += 1
-                    self.PT += 1
+                self.bump_mt_ml_pt(tracking_ratio)
+        return n_ignored_tr_total
 
+    def bump_id_switches(self, g: List[int], f: int, last_id: int) -> None:
+        if last_id != g[f] and last_id != -1 and g[f] != -1 and g[f - 1] != -1:
+            self.id_switches += 1
+
+    def bump_fragments(self, g: List[int], f: int, last_id: int) -> None:
+        if f < len(g) - 1 and g[f - 1] != g[f] and last_id != -1 and g[f] != -1 and g[f + 1] != -1:
+            self.fragments += 1
+
+    def handle_last_frame(self, g: List[int], f: int, ign_g: List[bool], last_id: int) -> None:
+        if len(g) > 1 and g[f - 1] != g[f] and last_id != -1 and g[f] != -1 and not ign_g[f]:
+            self.fragments += 1
+
+    def bump_mt_ml_pt(self, tracking_ratio: float) -> None:
+        if tracking_ratio > 0.8:
+            self.MT += 1
+        elif tracking_ratio < 0.2:
+            self.ML += 1
+        else:  # 0.2 <= tracking_ratio <= 0.8
+            self.PT += 1
+
+    def compute_mt_ml_pt(self, n_ignored_tr_total: int) -> None:
         if (self.n_gt_trajectories - n_ignored_tr_total) == 0:
             self.MT = 0.0
             self.PT = 0.0
@@ -760,22 +764,25 @@ class TrackingEvaluation(object):
             self.PT /= float(self.n_gt_trajectories - n_ignored_tr_total)
             self.ML /= float(self.n_gt_trajectories - n_ignored_tr_total)
 
-        # precision/recall etc.
-        if (self.fp + self.tp) == 0 or (self.tp + self.fn) == 0:
+    def compute_f1(self) -> None:  # precision/recall/F1-score.
+        if (self.fp + self.tp) == 0 or (self.fn + self.tp) == 0:
             self.recall = 0.0
             self.precision = 0.0
         else:
             self.recall = self.tp / float(self.tp + self.fn)
             self.precision = self.tp / float(self.fp + self.tp)
-        if (self.recall + self.precision) == 0:
+        if abs(self.recall + self.precision) < 0.000001:
             self.F1 = 0.0
         else:
             self.F1 = 2.0 * (self.precision * self.recall) / (self.precision + self.recall)
+
+    def compute_far(self) -> None:
         if sum(self.n_frames) == 0:
             self.FAR = 'n/a'
         else:
             self.FAR = self.fp / float(sum(self.n_frames))
 
+    def compute_clear_mot(self, recall_thres: float) -> None:
         # compute CLEARMOT
         if self.n_gt == 0:
             self.MOTA = -float('inf')
@@ -784,35 +791,29 @@ class TrackingEvaluation(object):
         else:
             self.MOTA = 1 - (self.fn + self.fp + self.id_switches) / float(self.n_gt)
             self.MODA = 1 - (self.fn + self.fp) / float(self.n_gt)
-            self.sMOTA = min(
-                1,
-                max(
-                    0,
-                    1
-                    - (self.fn + self.fp + self.id_switches - (1 - recall_thres) * self.n_gt)
-                    / float(recall_thres * self.n_gt),
-                ),
-            )
+            ratio = 1.0 - (
+                self.fn + self.fp + self.id_switches - (1.0 - recall_thres) * self.n_gt
+            ) / (recall_thres * self.n_gt)
+            self.sMOTA = min(1.0, max(0.0, ratio))
+
+    def compute_motp(self) -> None:
         if self.tp == 0:
             self.MOTP = 0
         else:
             self.MOTP = self.total_cost / float(self.tp)
+
+    def compute_motal(self) -> None:
         if self.n_gt != 0:
             if self.id_switches == 0:
-                self.MOTAL = 1 - (self.fn + self.fp + self.id_switches) / float(self.n_gt)
+                self.MOTAL = 1 - (self.fn + self.fp) / self.n_gt
             else:
-                self.MOTAL = 1 - (self.fn + self.fp + math.log10(self.id_switches)) / float(
-                    self.n_gt
-                )
+                self.MOTAL = 1 - (self.fn + self.fp + math.log10(self.id_switches)) / self.n_gt
         else:
             self.MOTAL = -float('inf')
-        if sum(self.n_frames) == 0:
-            self.MODP = 'n/a'
-        else:
-            self.MODP = sum(self.MODP_t) / float(sum(self.n_frames))
 
-        self.num_gt = self.tp + self.fn
-        return True
+    def compute_modp(self) -> None:
+        frames_num = sum(self.n_frames)
+        self.MODP = 'n/a' if frames_num == 0 else sum(self.MODP_t) / frames_num
 
     def create_summary_details(self):
         """
@@ -871,7 +872,7 @@ class TrackingEvaluation(object):
 
         return summary
 
-    def createSummary_simple(self, threshold, recall):
+    def create_summary_simple(self, threshold, recall):
         """
         Generate and mail a summary of the results.
         If mailpy.py is present, the summary is instead printed.
@@ -952,7 +953,7 @@ class TrackingEvaluation(object):
         self.gt_trajectories = [[] for x in range(self.n_sequences)]
         self.ign_trajectories = [[] for x in range(self.n_sequences)]
 
-    def saveToStats(self, dump, threshold=None, recall=None):
+    def save_to_stats(self, dump, threshold=None, recall=None) -> str:
         """
         Save the statistics in a whitespace separate file.
         """
@@ -960,6 +961,7 @@ class TrackingEvaluation(object):
         if threshold is None:
             summary = self.create_summary_details()
         else:
-            summary = self.createSummary_simple(threshold, recall)
+            summary = self.create_summary_simple(threshold, recall)
         print(summary)  # mail or print the summary.
         print(summary, file=dump)
+        return summary

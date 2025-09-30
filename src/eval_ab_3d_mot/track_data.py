@@ -58,3 +58,11 @@ class TrackData(Box3D):
         """
         attrs = vars(self)
         return '\n'.join('%s: %s' % item for item in attrs.items())
+
+    def bump_fragmentation(self, tid: int, lid: int, max_truncation: int) -> None:
+        if tid != lid and lid != -1 and self.truncation < max_truncation:
+            self.fragmentation = 1
+
+    def bump_id_switch(self, tid: int, lid: int, max_truncation: int) -> None:
+        if tid != lid and lid != -1 and tid != -1 and self.truncation < max_truncation:
+            self.id_switch = 1

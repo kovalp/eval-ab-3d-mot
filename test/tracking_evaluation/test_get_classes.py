@@ -1,6 +1,6 @@
 """."""
 
-from eval_ab_3d_mot.tracking_evaluation import get_classes
+from eval_ab_3d_mot.core.tracking_evaluation import get_classes
 
 
 def test_get_classes() -> None:

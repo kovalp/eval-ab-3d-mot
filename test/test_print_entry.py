@@ -1,6 +1,6 @@
 """."""
 
-from eval_ab_3d_mot.print_entry import print_entry
+from eval_ab_3d_mot.core.print_entry import print_entry
 
 
 def test_print_entry() -> None:

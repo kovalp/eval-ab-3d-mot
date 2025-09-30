@@ -3,9 +3,10 @@
 import os
 import sys
 
+from eval_ab_3d_mot.core.tracking_evaluation import TrackingEvaluation
+
 from .stat import Stat
 from .thresholds import get_thresholds
-from .tracking_evaluation import TrackingEvaluation
 
 
 def evaluate(result_sha, num_hypo, eval_3diou, eval_2diou, thres):
@@ -83,11 +84,11 @@ def evaluate(result_sha, num_hypo, eval_3diou, eval_2diou, thres):
             if mota_tmp > best_mota:
                 best_threshold = threshold_tmp
                 best_mota = mota_tmp
-            e.saveToStats(dump, threshold_tmp, recall_tmp)
+            e.save_to_stats(dump, threshold_tmp, recall_tmp)
 
         e.reset()
         e.compute_3rd_party_metrics(best_threshold)
-        e.saveToStats(dump)
+        e.save_to_stats(dump)
 
         stat_meter.output()
         summary = stat_meter.get_summary()
