@@ -1,8 +1,11 @@
 """."""
 
-import argparse
+from argparse import ArgumentParser
+from typing import Dict, Sequence, Tuple, Union
 
-from typing import Any, Dict, Sequence, Tuple, Union
+from rich_argparse import RawTextRichHelpFormatter
+
+from eval_ab_3d_mot.cli.common import get_hlp
 
 
 PROG = 'eval-ab-3d-mot'
@@ -15,7 +18,7 @@ HLP_SEQ_NAMES = 'Names of sequences to evaluate.'
 HLP_CLS = 'Classes to evaluate.'
 
 
-class CmdLine:
+class CmdLineEvaluate:
     def __init__(self) -> None:
         self.tracking_sha = 'my-sha'
         self.dimension = 3
@@ -54,15 +57,9 @@ class CmdLine:
         return None if self.threshold.lower() == 'none' else float(self.threshold)
 
 
-def get_hlp(msg: str, def_val: Any) -> str:
-    return f'{msg} {{{def_val}}}'
-
-
-def get_cmd_line(args: Sequence[str]) -> CmdLine:
-    cli = CmdLine()
-
-    usage = f'{PROG} [OPTIONS]'
-    parser = argparse.ArgumentParser(PROG, usage)
+def get_cmd_line(args: Sequence[str]) -> CmdLineEvaluate:
+    cli = CmdLineEvaluate()
+    parser = ArgumentParser(PROG, f'{PROG} [OPTIONS]', formatter_class=RawTextRichHelpFormatter)
     parser.add_argument('--tracking-sha', help=get_hlp(HLP_SHA, cli.tracking_sha))
     parser.add_argument('--threshold', '-t', type=str, help=get_hlp(HLP_THR, cli.threshold))
     hlp_d = get_hlp('2D or 3D evaluation?', cli.dimension)
