@@ -1,21 +1,16 @@
 """."""
 
-
 import pytest
 
-from eval_ab_3d_mot.cmd_line import CmdLine, get_cmd_line, get_hlp
+from eval_ab_3d_mot.cli.evaluate.cmd_line import CmdLineEvaluate, get_cmd_line
 from eval_ab_3d_mot.core.tracking_evaluation import SEQ_LENGTHS_NAME
 
 
 def test_cmd_line() -> None:
-    cli = CmdLine()
+    cli = CmdLineEvaluate()
     assert cli.get_threshold() is None
     assert cli.get_seq_lengths_name() == SEQ_LENGTHS_NAME
     assert cli.get_3d_2d_flags() == (True, False)
-
-
-def test_get_hlp() -> None:
-    assert get_hlp('help message', 'def value') == 'help message {def value}'
 
 
 def test_get_cmd_line() -> None:

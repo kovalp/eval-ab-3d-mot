@@ -21,7 +21,8 @@ dependencies = [
 ]
 
 [project.scripts]
-eval-ab-3d-mot = "eval_ab_3d_mot.cli_main:main"
+run-ab-3d-mot = "eval_ab_3d_mot.cli.ab_3d_mot.ab_3d_mot_main:main"
+eval-ab-3d-mot = "eval_ab_3d_mot.cli.evaluate.evaluate_main:main"
 
 
 [project.urls]
