@@ -7,6 +7,7 @@ from rich_argparse import RawTextRichHelpFormatter
 
 from eval_ab_3d_mot.cli.common import get_hlp
 
+
 PROG = 'run-ab-3d-mot'
 HLP_OUT = 'File name to store tracking results.'
 
