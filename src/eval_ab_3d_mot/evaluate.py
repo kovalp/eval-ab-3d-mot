@@ -58,7 +58,7 @@ def evaluate(
         suffix = 'eval_3d' if eval_3diou else 'eval_2d'
         filename = os.path.join(e.t_path, '../summary_%s_average_%s.txt' % (c, suffix))
         dump = open(filename, 'w+')
-        stat_meter = Stat(t_sha=result_sha, cls=c, suffix=suffix)
+        stat_meter = Stat(t_sha=result_sha, cls=c)
         e.compute_3rd_party_metrics()
 
         # evaluate the mean average metrics

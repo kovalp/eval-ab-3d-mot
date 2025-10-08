@@ -292,8 +292,7 @@ class TrackingEvaluation(object):
             self.eval_3d = eval_3d
             self.n_tr_seq = n_trajectories_seq
             if self.n_tr_trajectories == 0:
-                print('not is_ground_truth')
-                return False
+                raise IOError(f'n_tr_trajectories {self.n_tr_trajectories}')
         else:
             # split ground truth and DontCare areas
             self.dcareas.clear()
