@@ -1,8 +1,9 @@
 """."""
 
-import argparse
-
+from argparse import ArgumentParser
 from typing import Dict, Sequence, Tuple, Union
+
+from rich_argparse import RawTextRichHelpFormatter
 
 from eval_ab_3d_mot.cli.common import get_hlp
 
@@ -58,7 +59,7 @@ class CmdLineEvaluate:
 
 def get_cmd_line(args: Sequence[str]) -> CmdLineEvaluate:
     cli = CmdLineEvaluate()
-    parser = argparse.ArgumentParser(PROG, f'{PROG} [OPTIONS]')
+    parser = ArgumentParser(PROG, f'{PROG} [OPTIONS]', formatter_class=RawTextRichHelpFormatter)
     parser.add_argument('--tracking-sha', help=get_hlp(HLP_SHA, cli.tracking_sha))
     parser.add_argument('--threshold', '-t', type=str, help=get_hlp(HLP_THR, cli.threshold))
     hlp_d = get_hlp('2D or 3D evaluation?', cli.dimension)

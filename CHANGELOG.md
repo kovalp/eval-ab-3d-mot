@@ -18,3 +18,6 @@
   - Start testing `TrackingEvaluation.compute_3d_party_metrics`.
   - Tested all, many by defining smaller functions.
   - Added an argparse-based CLI.
+  - Added rich-argparse raw-text formatter in CLI.
+  - Added a CLI to run the AB3DMOT tracker (from the `pure-ab-3d-mot` package).
+
