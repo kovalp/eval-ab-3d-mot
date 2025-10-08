@@ -12,4 +12,4 @@ def test_get_cmd_line() -> None:
     assert isinstance(cli, CmdLineRunAb3dMot)
     assert cli.verbosity == 1
     assert cli.det_file_name == 'detections-in-point-r-cnn-format/cyclist/0000.txt'
-    assert cli.trk_file_name == 'tracking-kitti-info.txt'
+    assert cli.trk_file_name == 'tracking-kitti.txt'
