@@ -24,4 +24,3 @@ def test_get_cmd_line() -> None:
     assert cli.verbosity == 1
     assert cli.ann_file_name == 'annotations/0000.txt'
     assert cli.trk_file_name == 'tracking-kitti.txt'
-

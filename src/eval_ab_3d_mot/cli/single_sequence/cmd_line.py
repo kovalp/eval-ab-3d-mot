@@ -1,9 +1,8 @@
 """."""
 
 from argparse import ArgumentParser
-from typing import Sequence
 from pathlib import Path
-
+from typing import Sequence
 
 from rich_argparse import RawTextRichHelpFormatter
 
