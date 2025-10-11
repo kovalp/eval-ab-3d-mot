@@ -24,6 +24,7 @@ dependencies = [
 [project.scripts]
 run-ab-3d-mot = "eval_ab_3d_mot.cli.ab_3d_mot.ab_3d_mot_main:main"
 eval-ab-3d-mot = "eval_ab_3d_mot.cli.evaluate.evaluate_main:main"
+eval-ab-3d-mot-single-seq = "eval_ab_3d_mot.cli.single_sequence.single_sequence_main:main"
 
 
 [project.urls]
@@ -35,10 +36,10 @@ package = true
 
 [dependency-groups]
 dev = [
-    "bump-my-version>=1.2.2; python_version < '3.14'",
+    "bump-my-version>=1.2.4; python_version < '3.14'",
     "pytest>=8.3.5",
     "pytest-cov>=5.0.0",
-    "ruff>=0.13.0",
+    "ruff>=0.14.0",
 ]
 
 [build-system]

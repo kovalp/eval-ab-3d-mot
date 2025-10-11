@@ -11,7 +11,7 @@ class Stat:
     Utility class to load data.
     """
 
-    def __init__(self, t_sha: str, cls: str, suffix: str) -> None:
+    def __init__(self, t_sha: str, cls: str) -> None:
         """
         Constructor, initializes the object given the parameters.
         """
@@ -36,7 +36,6 @@ class Stat:
 
         self.t_sha = t_sha
         self.cls = cls
-        self.suffix = suffix
 
         self.sAMOTA = 0.0
         self.amota = 0.0

@@ -31,4 +31,5 @@ def write_ab_3d_mot_tracking(result: List[List[np.ndarray]], file_name: str) -> 
             step_ls = [step]
             if len(tracks_at_time_step) > 0:
                 for track in tracks_at_time_step:
-                    writer.writerow(step_ls + get_kitti_tracking(track))
+                    line_ls = step_ls + get_kitti_tracking(track)
+                    writer.writerow(line_ls)
