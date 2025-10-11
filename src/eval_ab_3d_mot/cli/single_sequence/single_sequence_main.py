@@ -29,7 +29,7 @@ def run(args: Union[Sequence[str], None] = None) -> bool:
     trk_eval.gt_path = str(ann_path.parent)
     trk_eval.load_data(True)
 
-    with TemporaryDirectory(delete=False) as tmpdir:
+    with TemporaryDirectory() as tmpdir:
         tmp_file_path = (Path(tmpdir) / seq_name).with_suffix('.txt')
         shutil.copy(trk_path, tmp_file_path)
         trk_eval.t_path = str(tmp_file_path.parent)
