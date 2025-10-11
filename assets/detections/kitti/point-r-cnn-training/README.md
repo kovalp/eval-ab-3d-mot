@@ -4,8 +4,9 @@ The data is copied from [AB-3D-MOT original repo](https://github.com/xinshuoweng
 
 The goal is to reproduce the well-known tracking quality metrics (MOTA and ClearMOT) locally
 without submission to the KITTI evaluation server. This implies having the corresponding 
-annotations available on-site. Since KITTI provides annotations only to its `training` subset,
-only corresponding detections are kept in this repo.
+annotations on-site. The KITTI provides annotations only for its `training` subset
+(referred by the short name `val` in the original AB3DMOT repo). Therefore, only corresponding
+detections are stored in this repo.
 
 The format of the data per column
 
