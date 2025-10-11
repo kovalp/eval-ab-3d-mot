@@ -37,7 +37,8 @@ def run(args: Union[Sequence[str], None] = None) -> bool:
         trk_eval.t_path = str(tmp_file_path.parent)
         trk_eval.load_data(False)
 
-    evaluate_and_report(trk_eval, category, result_sha, True)
+    file_name = './single_sequence_result.txt'
+    evaluate_and_report(trk_eval, category, result_sha, file_name)
     return True
 
 

@@ -1,4 +1,4 @@
-import os
+"""."""
 
 from eval_ab_3d_mot.core.tracking_evaluation import TrackingEvaluation
 from eval_ab_3d_mot.raise_if_sick import raise_if_sick
@@ -6,14 +6,12 @@ from eval_ab_3d_mot.stat import Stat
 from eval_ab_3d_mot.thresholds import get_thresholds
 
 
-def evaluate_and_report(e: TrackingEvaluation, c: str, result_sha: str, eval_3diou: bool) -> None:
+def evaluate_and_report(e: TrackingEvaluation, c: str, result_sha: str, filename: str) -> None:
     # sanity checks
     raise_if_sick(len(e.ground_truth), len(e.tracker))
     print('Loaded %d Sequences.' % len(e.ground_truth))
     print('Start Evaluation...')
 
-    suffix = 'eval_3d' if eval_3diou else 'eval_2d'
-    filename = os.path.join(e.t_path, '../summary_%s_average_%s.txt' % (c, suffix))
     dump = open(filename, 'w+')
     stat_meter = Stat(t_sha=result_sha, cls=c)
     e.compute_3rd_party_metrics()
