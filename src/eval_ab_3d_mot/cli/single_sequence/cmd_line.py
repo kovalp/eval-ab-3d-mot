@@ -2,13 +2,15 @@
 
 from argparse import ArgumentParser
 from typing import Sequence
+from pathlib import Path
+
 
 from rich_argparse import RawTextRichHelpFormatter
 
 from eval_ab_3d_mot.cli.common import get_hlp
 
 
-PROG = 'run-ab-3d-mot'
+PROG = 'eval-ab-3d-mot-single-seq'
 HLP_INP = 'File name to store tracking results.'
 
 
@@ -17,6 +19,12 @@ class CmdLineSingleSequence:
         self.verbosity = 0
         self.trk_file_name = 'tracking-kitti.txt'
         self.ann_file_name = ''
+
+    def get_ann_path(self) -> Path:
+        ann_path = Path(self.ann_file_name)
+        if ann_path.suffix != '.txt':
+            raise ValueError('The suffix (extension) should be .txt')
+        return ann_path
 
 
 def get_cmd_line(args: Sequence[str]) -> CmdLineSingleSequence:

@@ -9,17 +9,15 @@ from typing import Sequence, Union
 import numpy as np
 
 from eval_ab_3d_mot.core.tracking_evaluation import TrackingEvaluation
+from eval_ab_3d_mot.evaluate_and_report import evaluate_and_report
 
-from ...evaluate_and_report import evaluate_and_report
 from .cmd_line import get_cmd_line
 
 
 def run(args: Union[Sequence[str], None] = None) -> bool:
     result_sha = 'single-sequence'
     cli = get_cmd_line(args)
-    ann_path = Path(cli.ann_file_name)
-    if ann_path.suffix != '.txt':
-        raise ValueError('The suffix (extension) should be .txt')
+    ann_path = cli.get_ann_path()
 
     seq_name = ann_path.with_suffix('').name
     frame_numbers = np.genfromtxt(ann_path, usecols=[0], dtype=int)

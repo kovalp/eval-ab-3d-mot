@@ -22,7 +22,7 @@ def run(args: Union[Sequence[str], None] = None) -> bool:
         persistent_tracks = tracker.output()
         result.append(persistent_tracks)
         if cli.verbosity > 0:
-            print(step, len(det_dct[DETS]), len(persistent_tracks), det_dct[INFO])
+            print(step, len(det_dct[DETS]), len(persistent_tracks))
 
     write_ab_3d_mot_tracking(result, cli.trk_file_name)
     print('written', cli.trk_file_name)
