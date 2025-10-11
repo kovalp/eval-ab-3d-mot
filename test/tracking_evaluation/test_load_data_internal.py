@@ -103,4 +103,5 @@ def test_trigger_no_trajectories(te: TrackingEvaluation) -> None:
     """."""
     te.sequence_name = ['0012-17']
     te.n_frames = [3]
-    assert not te._load_data(te.t_path, 'bogus-class', False)
+    with pytest.raises(RuntimeError):
+        te._load_data(te.t_path, 'bogus-class', False)

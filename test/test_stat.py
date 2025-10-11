@@ -7,7 +7,7 @@ from eval_ab_3d_mot.stat import NUM_SAMPLE_POINTS, Stat
 
 @pytest.fixture
 def stat() -> Stat:
-    return Stat('sha', 'cyclist', '3d')
+    return Stat('sha', 'cyclist')
 
 
 def test_stat_init(stat: Stat) -> None:
@@ -15,7 +15,6 @@ def test_stat_init(stat: Stat) -> None:
     assert stat.mota_list == []
     assert stat.t_sha == 'sha'
     assert stat.cls == 'cyclist'
-    assert stat.suffix == '3d'
 
 
 def test_stat_update(stat: Stat) -> None:

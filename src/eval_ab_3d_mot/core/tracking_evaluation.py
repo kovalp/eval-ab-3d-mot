@@ -292,7 +292,7 @@ class TrackingEvaluation(object):
             self.eval_3d = eval_3d
             self.n_tr_seq = n_trajectories_seq
             if self.n_tr_trajectories == 0:
-                raise IOError(f'n_tr_trajectories {self.n_tr_trajectories}')
+                raise RuntimeError(f'n_tr_trajectories {self.n_tr_trajectories}')
         else:
             # split ground truth and DontCare areas
             self.dcareas.clear()
