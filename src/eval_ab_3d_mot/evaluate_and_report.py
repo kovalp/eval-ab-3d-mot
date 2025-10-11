@@ -6,14 +6,14 @@ from eval_ab_3d_mot.stat import Stat
 from eval_ab_3d_mot.thresholds import get_thresholds
 
 
-def evaluate_and_report(e: TrackingEvaluation, c: str, result_sha: str, filename: str) -> None:
+def evaluate_and_report(e: TrackingEvaluation, result_sha: str, filename: str) -> None:
     # sanity checks
     raise_if_sick(len(e.ground_truth), len(e.tracker))
     print('Loaded %d Sequences.' % len(e.ground_truth))
     print('Start Evaluation...')
 
     dump = open(filename, 'w+')
-    stat_meter = Stat(t_sha=result_sha, cls=c)
+    stat_meter = Stat(t_sha=result_sha, cls=e.cls)
     e.compute_3rd_party_metrics()
 
     # evaluate the mean average metrics

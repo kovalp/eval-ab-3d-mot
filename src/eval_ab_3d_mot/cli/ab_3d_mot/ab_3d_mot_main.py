@@ -7,7 +7,7 @@ import numpy as np
 from pure_ab_3d_mot.tracker import Ab3DMot
 
 from .cmd_line import get_cmd_line
-from .r_cnn_adaptor import DETS, read_r_cnn_ab_3d_mot
+from .r_cnn_adaptor import DETS, INFO, read_r_cnn_ab_3d_mot
 from .tracking_io import write_ab_3d_mot_tracking
 
 
@@ -22,7 +22,7 @@ def run(args: Union[Sequence[str], None] = None) -> bool:
         persistent_tracks = tracker.output()
         result.append(persistent_tracks)
         if cli.verbosity > 0:
-            print(step, len(det_dct[DETS]), len(persistent_tracks))
+            print(step, len(det_dct[DETS]), len(persistent_tracks), det_dct[INFO])
 
     write_ab_3d_mot_tracking(result, cli.trk_file_name)
     print('written', cli.trk_file_name)
