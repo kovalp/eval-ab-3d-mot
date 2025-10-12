@@ -5,7 +5,7 @@ from typing import Dict, Sequence, Tuple, Union
 
 from rich_argparse import RawTextRichHelpFormatter
 
-from eval_ab_3d_mot.cli.common import get_hlp
+from eval_ab_3d_mot.cli.common.get_hlp import get_hlp
 
 
 PROG = 'eval-ab-3d-mot'
