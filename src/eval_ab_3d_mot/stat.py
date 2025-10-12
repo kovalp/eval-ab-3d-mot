@@ -67,8 +67,7 @@ class Stat:
 
     def get_summary(self) -> str:
         summary = ''
-
-        summary += ('evaluation: average over recall').center(80, '=') + '\n'
+        summary += 'evaluation: average over recall'.center(80, '=') + '\n'
         summary += ' sAMOTA  AMOTA  AMOTP \n'
 
         summary += '{:.4f} {:.4f} {:.4f}\n'.format(self.sAMOTA, self.amota, self.amotp)

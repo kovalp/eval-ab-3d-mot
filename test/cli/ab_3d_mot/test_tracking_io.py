@@ -4,7 +4,7 @@ from pathlib import Path
 
 import numpy as np
 
-from eval_ab_3d_mot.cli.ab_3d_mot.tracking_io import write_ab_3d_mot_tracking
+from eval_ab_3d_mot.cli.common.tracking_io import write_ab_3d_mot_tracking
 
 
 def test_write_ab_3d_mot_tracking(tmp_path: Path) -> None:
