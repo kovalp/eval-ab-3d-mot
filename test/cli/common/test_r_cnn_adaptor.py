@@ -6,11 +6,8 @@ import pytest
 from eval_ab_3d_mot.cli.common.r_cnn_adaptor import DETS, RCnnAdaptor
 
 
-def test_r_cnn_adaptor() -> None:
+def test_r_cnn_adaptor(adaptor: RCnnAdaptor) -> None:
     """."""
-    raw_data = np.linspace(1, 15 * 6, num=90).reshape(6, 15)
-    raw_data[:, 0] = (1, 3, 3, 5, 5, 5)
-    adaptor = RCnnAdaptor(raw_data)
     all_det = []
     for ts, det_dct in enumerate(adaptor.detections_3d()):
         all_det.append(det_dct)

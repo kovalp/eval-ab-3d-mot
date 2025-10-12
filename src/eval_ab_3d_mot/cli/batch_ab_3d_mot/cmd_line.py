@@ -13,7 +13,7 @@ from eval_ab_3d_mot.kitti_category import KittiCategory
 PROG = 'batch-run-ab-3d-mot'
 HLP_OUT = 'Directory to store tracking results.'
 HLP_CATEGORY = 'Category of the detected objects.'
-AUTO_CATEGORY = 'derive from dir name'
+AUTO_CATEGORY = 'derived-from-dir-name'
 CATEGORIES = tuple(c.value for c in KittiCategory) + (AUTO_CATEGORY,)
 
 
