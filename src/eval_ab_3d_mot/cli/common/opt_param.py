@@ -3,6 +3,7 @@
 from pure_ab_3d_mot.dist_metrics import MetricKind
 from pure_ab_3d_mot.matching import MatchingAlgorithm
 from pure_ab_3d_mot.tracker import Ab3DMot
+
 from eval_ab_3d_mot.kitti_category import KittiCategory
 
 
