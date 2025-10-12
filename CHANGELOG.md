@@ -22,5 +22,6 @@
   - Added a script `run-ab-3d-mot` to run the AB3DMOT tracker (from `pure-ab-3d-mot` package).
   - Added a script `eval-ab-3d-mot-single-seq` to run the evaluator on results produced by `run-ab-3d-mot`.
   - Script `batch-run-ab-3d-mot` to run the AB3DMOT tracker for a set of detection sequences.
+  - Using the progress bar from the `rich` package in `batch-run-ab-3d-mot`. 
 
 
