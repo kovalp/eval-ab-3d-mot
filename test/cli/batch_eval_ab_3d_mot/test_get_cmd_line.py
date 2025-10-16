@@ -6,17 +6,13 @@ from eval_ab_3d_mot.cli.batch_eval_ab_3d_mot.cmd_line import get_cmd_line
 
 
 def test_category_and_tracking_dir() -> None:
-    args = [
-        'car/0001.txt',
-        'car/0002.txt',
-        '-v',
-        '-c',
-        'cyclist',
-        '-i',
-        'my-dir',
-        '-l',
-        'my-custom-label',
-    ]
+    # fmt: off
+    args = ['car/0001.txt', 'car/0002.txt',
+            '-v',
+            '-c', 'cyclist',
+            '-i', 'my-dir',
+            '-l', 'my-custom-label']
+    # fmt: on
     cli = get_cmd_line(args)
     assert cli.verbosity == 1
     assert cli.category == 'cyclist'
