@@ -10,7 +10,7 @@ from eval_ab_3d_mot.cli.common.get_hlp import get_hlp
 
 
 PROG = 'eval-ab-3d-mot-single-seq'
-HLP_INP = 'File name to store tracking results.'
+HLP_INP = 'File name to read tracking results.'
 
 
 class CmdLineSingleSequence:
