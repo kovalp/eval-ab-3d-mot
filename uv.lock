@@ -814,7 +814,7 @@ requires-dist = [
     { name = "munkres", specifier = ">=1.1.4" },
     { name = "pure-ab-3d-mot", specifier = ">=0.2.2" },
     { name = "pytest-mock", specifier = ">=3.14.1" },
-    { name = "rich", specifier = ">=14.1.0" },
+    { name = "rich", specifier = ">=14.2.0" },
     { name = "rich-argparse", specifier = ">=1.7.1" },
     { name = "scipy", specifier = ">=1.10.1" },
     { name = "scipy-stubs", marker = "python_full_version >= '3.10'", specifier = ">=1.14.1.3" },

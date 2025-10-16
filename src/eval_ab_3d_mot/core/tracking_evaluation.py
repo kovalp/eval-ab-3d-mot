@@ -170,6 +170,21 @@ class TrackingEvaluation(object):
         self.tracker: List[List[List[TrackData]]] = []
         self.num_gt: int = 0
 
+    def get_data_dict(self) -> Dict[str, float]:
+        dct = {
+            'mota': self.MOTA,
+            'motp': self.MOTP,
+            'moda': self.MODA,
+            'modp': self.MODP,
+            'precision': self.precision,
+            'F1': self.F1,
+            'fp': self.fp,
+            'fn': self.fn,
+            'recall': self.recall,
+            'sMOTA': self.sMOTA,
+        }
+        return dct
+
     def load_data(self, is_ground_truth: bool) -> bool:
         """
         Helper function to load ground truth or tracking data.

@@ -7,14 +7,17 @@ from typing import List, Sequence
 from rich_argparse import RawTextRichHelpFormatter
 
 from eval_ab_3d_mot.cli.common.get_hlp import get_hlp
+from eval_ab_3d_mot.cli.common.kitti_category import (
+    AUTO_CATEGORY,
+    CATEGORIES,
+    HLP_CATEGORY,
+    get_kitti_category,
+)
 from eval_ab_3d_mot.kitti_category import KittiCategory
 
 
 PROG = 'batch-run-ab-3d-mot'
 HLP_OUT = 'Directory to store tracking results.'
-HLP_CATEGORY = 'Category of the detected objects.'
-AUTO_CATEGORY = 'derived-from-dir-name'
-CATEGORIES = tuple(c.value for c in KittiCategory) + (AUTO_CATEGORY,)
 
 
 class CmdLineBatchRunAb3dMot:
@@ -25,9 +28,7 @@ class CmdLineBatchRunAb3dMot:
         self.category = AUTO_CATEGORY
 
     def get_category(self) -> KittiCategory:
-        cls_opt = self.category
-        first_path = Path(self.detections[0])
-        return KittiCategory(first_path.parent.name if cls_opt == AUTO_CATEGORY else cls_opt)
+        return get_kitti_category(self.category, self.detections[0])
 
     def get_detections(self) -> List[str]:
         if len(set(Path(d).parent for d in self.detections)) > 1:
