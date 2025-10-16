@@ -2,12 +2,18 @@
 
 import csv
 
-from typing import List, Union
+from typing import Any, List, Union
 
 import numpy as np
 
 
 CLASS_NAMES = ['?', 'Pedestrian', 'Car', 'Cyclist']
+
+
+def fmt(val: Any) -> str:
+    if isinstance(val, float):
+        return f'{val:.6f}'
+    return str(val)
 
 
 def get_kitti_tracking(track: np.ndarray) -> List[Union[int, float, str]]:
@@ -35,4 +41,4 @@ def write_ab_3d_mot_tracking(result: List[List[np.ndarray]], file_name: str) -> 
             if len(tracks_at_time_step) > 0:
                 for track in tracks_at_time_step:
                     line_ls = step_ls + get_kitti_tracking(track)
-                    writer.writerow(line_ls)
+                    writer.writerow([fmt(e) for e in line_ls])
