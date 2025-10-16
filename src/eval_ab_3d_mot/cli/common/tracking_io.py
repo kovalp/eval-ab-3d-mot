@@ -9,6 +9,7 @@ import numpy as np
 
 CLASS_NAMES = ['?', 'Pedestrian', 'Car', 'Cyclist']
 
+
 def fmt(val: Any) -> str:
     if isinstance(val, float):
         return f'{val:.6f}'

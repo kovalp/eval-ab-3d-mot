@@ -23,6 +23,7 @@ def run(args: Union[Sequence[str], None] = None) -> bool:
     trk_eval.gt_path = cli.get_gt_path()
     print(f'Loading ground truth data from {trk_eval.gt_path}/ ...')
     trk_eval.load_data(True)
+
     eval_category_label_dir = Path(cli.eval_dir) / cli.label / category
     eval_category_label_dir.mkdir(parents=True, exist_ok=True)
     print('eval_category_label_dir', eval_category_label_dir)
