@@ -15,6 +15,7 @@ PROG = 'batch-eval-ab-3d-mot'
 HLP_OUT = 'Directory to store evaluation results.'
 HLP_TRK = 'The root directory with tracking results.'
 HLP_LBL = 'A custom label to distinguish this evaluation.'
+HLP_THR = 'Threshold used for association in MOTA / ClearMOT.'
 
 
 class CmdLineBatchEvalAb3dMot:
@@ -25,6 +26,7 @@ class CmdLineBatchEvalAb3dMot:
         self.trk_dir = 'tracking-kitti'
         self.category = CATEGORIES[0]
         self.label = 'batch-eval'
+        self.threshold: float = 0.25
 
     def get_category(self) -> KittiCategory:
         return KittiCategory(self.category)
@@ -48,6 +50,7 @@ def get_cmd_line(args: Sequence[str]) -> CmdLineBatchEvalAb3dMot:
     parser.add_argument('--trk-dir', '-i', help=get_hlp(HLP_TRK, cli.trk_dir))
     parser.add_argument('--eval-dir', '-o', help=get_hlp(HLP_OUT, cli.eval_dir))
     parser.add_argument('--label', '-l', help=get_hlp(HLP_LBL, cli.label))
+    parser.add_argument('--threshold', '-t', type=float, help=get_hlp(HLP_THR, cli.threshold))
     parser.add_argument(
         '--category', '-c', choices=CATEGORIES, help=get_hlp(HLP_CATEGORY, cli.category)
     )

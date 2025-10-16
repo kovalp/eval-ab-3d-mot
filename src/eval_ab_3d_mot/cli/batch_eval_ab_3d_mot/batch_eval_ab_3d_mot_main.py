@@ -15,7 +15,7 @@ def run(args: Union[Sequence[str], None] = None) -> bool:
     category = cli.get_category().value
     ann_files = cli.get_annotation_file_names()
     seq_lengths_name = get_seq_lengths_name(ann_files)
-    trk_eval = TrackingEvaluation(cli.label, seq_lengths_name, cls=category)
+    trk_eval = TrackingEvaluation(cli.label, seq_lengths_name, cls=category, thres=cli.threshold)
     trk_eval.t_path = cli.get_trk_path()
     print(f'Loading tracking data from {trk_eval.t_path}/ ...')
     trk_eval.load_data(False)
