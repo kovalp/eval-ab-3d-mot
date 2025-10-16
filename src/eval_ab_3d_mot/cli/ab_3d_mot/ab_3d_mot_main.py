@@ -13,9 +13,9 @@ from .cmd_line import get_cmd_line
 
 def run(args: Union[Sequence[str], None] = None) -> bool:
     cli = get_cmd_line(args)
-    detections = read_r_cnn_ab_3d_mot(cli.det_file_name)
+    adaptor = read_r_cnn_ab_3d_mot(cli.det_file_name)
     tracker = Ab3DMot()
-    result = get_tracking_result(detections, tracker, cli.verbosity)
+    result = get_tracking_result(adaptor, tracker, cli.verbosity)
     write_ab_3d_mot_tracking(result, cli.trk_file_name)
     print('written', cli.trk_file_name)
     return True

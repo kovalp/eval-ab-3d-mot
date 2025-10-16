@@ -16,11 +16,14 @@ def get_kitti_tracking(track: np.ndarray) -> List[Union[int, float, str]]:
     track_id = int(track[0, 7])
     _frame_num = int(track[0, 8])
     class_name = CLASS_NAMES[int(track[0, 9])]
-    truncation, occlusion, alpha = -1, -2, -3
+    truncation, occlusion, alpha = 0, 0, float(track[0, 15])
     bbox = track[0, 10:14].tolist()
-    # xxx 14 and 15 are not used?
+    # The field 14 is part of the detection info
+    # It should be some measure of the detection confidence in some convention.
+    # In original ab-3D-MOT this is the last column.
+    # In the r-cnn detection files this field follows the bounding box.
     header = [track_id, class_name, truncation, occlusion, alpha] + bbox
-    return header + kitti_det.tolist()
+    return header + kitti_det.tolist() + [float(track[0, 14])]
 
 
 def write_ab_3d_mot_tracking(result: List[List[np.ndarray]], file_name: str) -> None:
