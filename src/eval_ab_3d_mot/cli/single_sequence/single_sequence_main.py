@@ -6,9 +6,9 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 from typing import Sequence, Union
 
+from eval_ab_3d_mot.cli.common.annotation_num_frames import get_seq_lengths_name
 from eval_ab_3d_mot.core.tracking_evaluation import TrackingEvaluation
 from eval_ab_3d_mot.evaluate_and_report import evaluate_and_report
-from eval_ab_3d_mot.cli.common.annotation_num_frames import get_seq_lengths_name
 
 from .cmd_line import get_cmd_line
 

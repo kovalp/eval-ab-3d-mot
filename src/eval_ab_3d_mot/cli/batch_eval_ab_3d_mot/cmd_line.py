@@ -7,8 +7,9 @@ from typing import List, Sequence
 from rich_argparse import RawTextRichHelpFormatter
 
 from eval_ab_3d_mot.cli.common.get_hlp import get_hlp
-from eval_ab_3d_mot.kitti_category import KittiCategory
 from eval_ab_3d_mot.cli.common.kitti_category import CATEGORIES, HLP_CATEGORY
+from eval_ab_3d_mot.kitti_category import KittiCategory
+
 
 PROG = 'batch-eval-ab-3d-mot'
 HLP_OUT = 'Directory to store evaluation results.'

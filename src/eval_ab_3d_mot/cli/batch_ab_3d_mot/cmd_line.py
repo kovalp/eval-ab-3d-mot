@@ -8,7 +8,10 @@ from rich_argparse import RawTextRichHelpFormatter
 
 from eval_ab_3d_mot.cli.common.get_hlp import get_hlp
 from eval_ab_3d_mot.cli.common.kitti_category import (
-    HLP_CATEGORY, AUTO_CATEGORY, CATEGORIES, get_kitti_category
+    AUTO_CATEGORY,
+    CATEGORIES,
+    HLP_CATEGORY,
+    get_kitti_category,
 )
 from eval_ab_3d_mot.kitti_category import KittiCategory
 

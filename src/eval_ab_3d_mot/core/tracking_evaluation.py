@@ -181,7 +181,7 @@ class TrackingEvaluation(object):
             'fp': self.fp,
             'fn': self.fn,
             'recall': self.recall,
-            'sMOTA': self.sMOTA
+            'sMOTA': self.sMOTA,
         }
         return dct
 

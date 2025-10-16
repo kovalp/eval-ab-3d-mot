@@ -7,7 +7,7 @@ from eval_ab_3d_mot.thresholds import get_thresholds
 
 
 def evaluate_and_report(e: TrackingEvaluation, result_sha: str, filename: str) -> None:
-    raise_if_sick(len(e.ground_truth), len(e.tracker))     # sanity check
+    raise_if_sick(len(e.ground_truth), len(e.tracker))  # sanity check
     print(f'Loaded {len(e.ground_truth)} sequences.')
     print('Start evaluation...')
 

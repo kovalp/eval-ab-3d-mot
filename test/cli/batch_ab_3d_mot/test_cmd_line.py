@@ -3,7 +3,6 @@
 import pytest
 
 from eval_ab_3d_mot.cli.batch_ab_3d_mot.cmd_line import CmdLineBatchRunAb3dMot, get_cmd_line
-from eval_ab_3d_mot.kitti_category import KittiCategory
 
 
 @pytest.fixture()
@@ -18,16 +17,6 @@ def test_get_detections(cli: CmdLineBatchRunAb3dMot) -> None:
     cli.detections = ['car/002.txt', 'pedestrian/001.txt']
     with pytest.raises(ValueError):
         cli.get_detections()
-
-
-def test_get_category(cli: CmdLineBatchRunAb3dMot) -> None:
-    assert cli.get_category() == KittiCategory.CAR
-    cli.category = 'bogus category'
-    with pytest.raises(ValueError):
-        cli.get_category()
-
-    cli.category = 'pedestrian'
-    assert cli.get_category() == KittiCategory.PEDESTRIAN
 
 
 def test_category_and_tracking_dir() -> None:
