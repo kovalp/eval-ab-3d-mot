@@ -30,9 +30,9 @@ class RCnnAdaptor:
             yield {DETS: hwl_xyz_ry, INFO: info}
 
 
-def read_r_cnn_ab_3d_mot(file_name: str, ann_dir: str, num_det: int) -> RCnnAdaptor:
+def read_r_cnn_ab_3d_mot(file_name: str, ann_dir: str, last_ts: int) -> RCnnAdaptor:
     det_data = np.loadtxt(file_name, delimiter=',')
-    if num_det < 1:
+    if last_ts < 1:
         ann_path = Path(ann_dir) / Path(file_name).name
         if not ann_path.exists():
             raise ValueError(
@@ -40,7 +40,7 @@ def read_r_cnn_ab_3d_mot(file_name: str, ann_dir: str, num_det: int) -> RCnnAdap
                 'I need this file to find the number of time stamps.'
             )
         ann_timestamps = np.genfromtxt(ann_path, delimiter=' ', usecols=(0,), dtype=int)
-        num_ts_ann = ann_timestamps.max()
+        last_ts = ann_timestamps.max()
     else:
-        num_ts_ann = num_det
-    return RCnnAdaptor(det_data, num_ts_ann)
+        last_ts = last_ts
+    return RCnnAdaptor(det_data, last_ts)
