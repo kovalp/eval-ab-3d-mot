@@ -1,5 +1,7 @@
 """."""
 
+import sys
+
 from eval_ab_3d_mot.core.tracking_evaluation import TrackingEvaluation
 from eval_ab_3d_mot.raise_if_sick import raise_if_sick
 from eval_ab_3d_mot.stat import Stat
@@ -21,6 +23,9 @@ def evaluate_and_report(e: TrackingEvaluation, result_sha: str, filename: str) -
     for threshold_tmp, recall_tmp in zip(threshold_list, recall_list):
         e.reset()
         e.compute_3rd_party_metrics(threshold_tmp, recall_tmp)
+        # print('e.tp', e.tp, threshold_tmp, recall_tmp, e.min_overlap, e.min_height)
+        # sys.exit()
+
         data_tmp = e.get_data_dict()
         stat_meter.update(data_tmp)
         mota_tmp = e.MOTA

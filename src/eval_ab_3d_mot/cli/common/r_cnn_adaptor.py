@@ -5,6 +5,7 @@ from typing import Dict, Iterable
 
 import numpy as np
 
+from eval_ab_3d_mot.cli.common.annotation_num_frames import get_frame_number_from_ann_file
 
 DETS = 'dets'
 INFO = 'info'
@@ -39,8 +40,7 @@ def read_r_cnn_ab_3d_mot(file_name: str, ann_dir: str, last_ts: int) -> RCnnAdap
                 f'The annotation file {ann_path} does not exist. '
                 'I need this file to find the number of time stamps.'
             )
-        ann_timestamps = np.genfromtxt(ann_path, delimiter=' ', usecols=(0,), dtype=int)
-        last_ts = ann_timestamps.max()
+        last_ts = get_frame_number_from_ann_file(str(ann_path)) - 1
     else:
         last_ts = last_ts
     return RCnnAdaptor(det_data, last_ts)

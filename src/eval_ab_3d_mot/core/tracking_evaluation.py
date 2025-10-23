@@ -459,6 +459,8 @@ class TrackingEvaluation(object):
                 # the reason is that some true positives might be ignored
                 # later such that the corresponding overlaps can
                 # be subtracted from tmpc for MODP computation
+                if threshold > 0.0 and f == 332:
+                    print(threshold, f, cost_matrix)
 
                 # mapping for tracker ids and ground truth ids
                 for row, col in association_matrix:
