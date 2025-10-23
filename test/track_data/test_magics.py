@@ -34,5 +34,5 @@ score: -1000"""
 
 
 def test_track_data_repr(td: TrackData) -> None:
-    """."""
-    assert td.__repr__() == 'Track(id 123 frame 456 x 1 y 2 z 3)'
+    td.score = 0.567
+    assert td.__repr__() == 'Track(id 123 frame 456 score 0.567 x 1 y 2 z 3)'

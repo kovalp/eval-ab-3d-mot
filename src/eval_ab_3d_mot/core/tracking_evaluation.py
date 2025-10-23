@@ -439,6 +439,7 @@ class TrackingEvaluation(object):
                             cost_row.append(c)
                         else:
                             cost_row.append(max_cost)  # = 1e9
+
                     cost_matrix.append(cost_row)
                     # all ground truth trajectories are initially not associated
                     # extend ground-truth trajectories lists (merge lists)
@@ -447,6 +448,7 @@ class TrackingEvaluation(object):
 
                 if len(g) == 0:
                     cost_matrix = [[]]
+
                 # associate
                 association_matrix = hm.compute(cost_matrix)
 
@@ -459,8 +461,6 @@ class TrackingEvaluation(object):
                 # the reason is that some true positives might be ignored
                 # later such that the corresponding overlaps can
                 # be subtracted from tmpc for MODP computation
-                if threshold > 0.0 and f == 332:
-                    print(threshold, f, cost_matrix)
 
                 # mapping for tracker ids and ground truth ids
                 for row, col in association_matrix:
