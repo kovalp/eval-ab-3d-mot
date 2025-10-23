@@ -11,7 +11,8 @@ def test_run(files_dir: Path, tmp_path: Path) -> None:
         str(files_dir / 'kitti/detections/point-r-cnn-training/cyclist/0000.txt'),
         str(files_dir / 'kitti/detections/point-r-cnn-training/cyclist/0012.txt'),
         '-v',
-        '-o', 'tracking-results'
+        '-o', 'tracking-results',
+        '--ann-dir', str(files_dir / 'kitti/annotations/training')
     ]
     # fmt: on
     assert run(args)

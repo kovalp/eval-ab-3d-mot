@@ -18,11 +18,13 @@ from eval_ab_3d_mot.kitti_category import KittiCategory
 
 PROG = 'batch-run-ab-3d-mot'
 HLP_OUT = 'Directory to store tracking results.'
+HLP_ANN = 'Annotations (ground-truth) directory.'
 
 
 class CmdLineBatchRunAb3dMot:
     def __init__(self) -> None:
         self.verbosity = 0
+        self.ann_dir = 'assets/annotations/kitti/training'
         self.detections: List[str] = []
         self.trk_dir = 'tracking-kitti'
         self.category = AUTO_CATEGORY
@@ -40,10 +42,10 @@ def get_cmd_line(args: Sequence[str]) -> CmdLineBatchRunAb3dMot:
     cli = CmdLineBatchRunAb3dMot()
     parser = ArgumentParser(PROG, f'{PROG} [OPTIONS]', formatter_class=RawTextRichHelpFormatter)
     parser.add_argument('detections', nargs='+', help='Detection files.')
+    parser.add_argument('--ann-dir', '-a', help=get_hlp(HLP_ANN, cli.ann_dir))
     parser.add_argument('--trk-dir', '-o', help=get_hlp(HLP_OUT, cli.trk_dir))
-    parser.add_argument(
-        '--category', '-c', choices=CATEGORIES, help=get_hlp(HLP_CATEGORY, cli.category)
-    )
+    hlp_category = get_hlp(HLP_CATEGORY, cli.category)
+    parser.add_argument('--category', '-c', choices=CATEGORIES, help=hlp_category)
     parser.add_argument('--verbosity', '-v', action='count', help='Script verbosity.')
     parser.parse_args(args, namespace=cli)
     return cli

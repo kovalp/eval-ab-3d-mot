@@ -24,7 +24,7 @@ def run(args: Union[Sequence[str], None] = None) -> bool:
         detections = cli.get_detections()
         task = progress.add_task('[cyan]Working...', total=len(detections))
         for det_file_name in cli.get_detections():
-            adaptor = read_r_cnn_ab_3d_mot(det_file_name)
+            adaptor = read_r_cnn_ab_3d_mot(det_file_name, cli.ann_dir, 0)
             tracker = Ab3DMot()
             fill_r_cnn_opt_param(category, tracker)
             result = get_tracking_result(adaptor, tracker, cli.verbosity)
