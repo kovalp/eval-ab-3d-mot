@@ -25,8 +25,9 @@ class CmdLineRunAb3dMot:
 
 def get_cmd_line(args: Sequence[str]) -> CmdLineRunAb3dMot:
     cli = CmdLineRunAb3dMot()
-    parser = ArgumentParser(PROG, f'{PROG} <det_file> [OPTIONS]',
-                            formatter_class=RawTextRichHelpFormatter)
+    parser = ArgumentParser(
+        PROG, f'{PROG} <det_file> [OPTIONS]', formatter_class=RawTextRichHelpFormatter
+    )
     parser.add_argument('det_file_name', help='File name with detections.')
     parser.add_argument('--verbosity', '-v', action='count', help='Script verbosity.')
     parser.add_argument('--trk-file-name', '-o', help=get_hlp(HLP_OUT, cli.trk_file_name))

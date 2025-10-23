@@ -3,7 +3,7 @@
 import numpy as np
 import pytest
 
-from eval_ab_3d_mot.cli.common.r_cnn_adaptor import DETS, RCnnAdaptor, INFO
+from eval_ab_3d_mot.cli.common.r_cnn_adaptor import DETS, INFO, RCnnAdaptor
 
 
 def test_r_cnn_adaptor(adaptor: RCnnAdaptor) -> None:

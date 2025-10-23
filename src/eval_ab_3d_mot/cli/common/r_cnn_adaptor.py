@@ -35,8 +35,10 @@ def read_r_cnn_ab_3d_mot(file_name: str, ann_dir: str, num_det: int) -> RCnnAdap
     if num_det < 1:
         ann_path = Path(ann_dir) / Path(file_name).name
         if not ann_path.exists():
-            raise ValueError(f'The annotation file {ann_path} does not exist. '
-                             'I need this file to find the number of time stamps.')
+            raise ValueError(
+                f'The annotation file {ann_path} does not exist. '
+                'I need this file to find the number of time stamps.'
+            )
         ann_timestamps = np.genfromtxt(ann_path, delimiter=' ', usecols=(0,), dtype=int)
         num_ts_ann = ann_timestamps.max()
     else:
