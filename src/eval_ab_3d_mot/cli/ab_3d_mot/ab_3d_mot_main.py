@@ -13,7 +13,7 @@ from .cmd_line import get_cmd_line
 
 def run(args: Union[Sequence[str], None] = None) -> bool:
     cli = get_cmd_line(args)
-    adaptor = read_r_cnn_ab_3d_mot(cli.det_file_name)
+    adaptor = read_r_cnn_ab_3d_mot(cli.det_file_name, cli.ann_dir, cli.num_det)
     tracker = Ab3DMot()
     result = get_tracking_result(adaptor, tracker, cli.verbosity)
     write_ab_3d_mot_tracking(result, cli.trk_file_name)

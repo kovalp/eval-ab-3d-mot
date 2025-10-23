@@ -12,8 +12,9 @@ from eval_ab_3d_mot.cli.common.tracking_io import get_kitti_tracking
 
 
 def test_reproduce_track_data_0(files_dir: Path) -> None:
-    file_path = files_dir / 'kitti/detections/point-r-cnn-training/car/0001.txt'
-    adaptor = read_r_cnn_ab_3d_mot(str(file_path))
+    det_path = files_dir / 'kitti/detections/point-r-cnn-training/car/0001.txt'
+    ann_dir = files_dir / 'kitti/annotations/training'
+    adaptor = read_r_cnn_ab_3d_mot(str(det_path), str(ann_dir), 0)
     tracker = Ab3DMot()
     result = get_tracking_result(adaptor, tracker, 1)
     lst = get_kitti_tracking(result[0][0])

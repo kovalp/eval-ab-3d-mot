@@ -1,5 +1,6 @@
 """."""
 
+from pathlib import Path
 from typing import Dict, Iterable
 
 import numpy as np
@@ -10,13 +11,14 @@ INFO = 'info'
 
 
 class RCnnAdaptor:
-    def __init__(self, raw_data: np.ndarray) -> None:
+    def __init__(self, raw_data: np.ndarray, num_ts_ann: int) -> None:
         assert raw_data.ndim == 2
         assert raw_data.shape[1] == 15
         self.raw_data: np.ndarray = raw_data
         self.time_stamps = np.array(raw_data[:, 0], int)
         self.unique_tss = np.unique(self.time_stamps)
-        self.last_time_stamp = np.max(self.unique_tss)
+        assert num_ts_ann >= self.unique_tss.max()
+        self.last_time_stamp = num_ts_ann
 
     def detections_3d(self) -> Iterable[Dict[str, np.ndarray]]:
         for ts in range(self.last_time_stamp + 1):
@@ -28,6 +30,15 @@ class RCnnAdaptor:
             yield {DETS: hwl_xyz_ry, INFO: info}
 
 
-def read_r_cnn_ab_3d_mot(file_name: str) -> RCnnAdaptor:
-    data = np.loadtxt(file_name, delimiter=',')
-    return RCnnAdaptor(data)
+def read_r_cnn_ab_3d_mot(file_name: str, ann_dir: str, num_det: int) -> RCnnAdaptor:
+    det_data = np.loadtxt(file_name, delimiter=',')
+    if num_det < 1:
+        ann_path = Path(ann_dir) / Path(file_name).name
+        if not ann_path.exists():
+            raise ValueError(f'The annotation file {ann_path} does not exist. '
+                             'I need this file to find the number of time stamps.')
+        ann_timestamps = np.genfromtxt(ann_path, delimiter=' ', usecols=(0,), dtype=int)
+        num_ts_ann = ann_timestamps.max()
+    else:
+        num_ts_ann = num_det
+    return RCnnAdaptor(det_data, num_ts_ann)

@@ -3,7 +3,7 @@
 import numpy as np
 import pytest
 
-from eval_ab_3d_mot.cli.common.r_cnn_adaptor import DETS, RCnnAdaptor
+from eval_ab_3d_mot.cli.common.r_cnn_adaptor import DETS, RCnnAdaptor, INFO
 
 
 def test_r_cnn_adaptor(adaptor: RCnnAdaptor) -> None:
@@ -12,7 +12,7 @@ def test_r_cnn_adaptor(adaptor: RCnnAdaptor) -> None:
     for ts, det_dct in enumerate(adaptor.detections_3d()):
         all_det.append(det_dct)
 
-    assert len(all_det) == 6
+    assert len(all_det) == 11
     assert len(all_det[0][DETS]) == 0
     assert all_det[1][DETS] == pytest.approx(np.array([[8, 9, 10, 11, 12, 13, 14]]))
     assert len(all_det[2][DETS]) == 0
@@ -29,3 +29,6 @@ def test_r_cnn_adaptor(adaptor: RCnnAdaptor) -> None:
             ]
         )
     )
+    for ts in range(6, 11):
+        assert all_det[ts][DETS].shape == (0, 7)
+        assert all_det[ts][INFO].shape == (0, 8)

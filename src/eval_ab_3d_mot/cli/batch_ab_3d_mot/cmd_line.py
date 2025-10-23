@@ -44,9 +44,8 @@ def get_cmd_line(args: Sequence[str]) -> CmdLineBatchRunAb3dMot:
     parser.add_argument('detections', nargs='+', help='Detection files.')
     parser.add_argument('--ann-dir', '-a', help=get_hlp(HLP_ANN, cli.ann_dir))
     parser.add_argument('--trk-dir', '-o', help=get_hlp(HLP_OUT, cli.trk_dir))
-    parser.add_argument(
-        '--category', '-c', choices=CATEGORIES, help=get_hlp(HLP_CATEGORY, cli.category)
-    )
+    hlp_category = get_hlp(HLP_CATEGORY, cli.category)
+    parser.add_argument('--category', '-c', choices=CATEGORIES, help=hlp_category)
     parser.add_argument('--verbosity', '-v', action='count', help='Script verbosity.')
     parser.parse_args(args, namespace=cli)
     return cli

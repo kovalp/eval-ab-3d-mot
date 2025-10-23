@@ -17,4 +17,4 @@ def tracker() -> Ab3DMot:
 def adaptor() -> RCnnAdaptor:
     raw_data = np.linspace(1, 15 * 6, num=90).reshape(6, 15)
     raw_data[:, 0] = (1, 3, 3, 5, 5, 5)
-    return RCnnAdaptor(raw_data)
+    return RCnnAdaptor(raw_data, 10)
