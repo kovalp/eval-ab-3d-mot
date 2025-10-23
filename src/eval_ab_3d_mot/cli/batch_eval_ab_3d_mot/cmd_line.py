@@ -45,7 +45,8 @@ class CmdLineBatchEvalAb3dMot:
 
 def get_cmd_line(args: Sequence[str]) -> CmdLineBatchEvalAb3dMot:
     cli = CmdLineBatchEvalAb3dMot()
-    parser = ArgumentParser(PROG, f'{PROG} [OPTIONS]', formatter_class=RawTextRichHelpFormatter)
+    parser = ArgumentParser(PROG, f'{PROG} <annotation files> [OPTIONS]',
+                            formatter_class=RawTextRichHelpFormatter)
     parser.add_argument('annotations', nargs='+', help='Annotations files.')
     parser.add_argument('--trk-dir', '-i', help=get_hlp(HLP_TRK, cli.trk_dir))
     parser.add_argument('--eval-dir', '-o', help=get_hlp(HLP_OUT, cli.eval_dir))
