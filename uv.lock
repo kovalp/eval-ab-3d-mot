@@ -2238,7 +2238,7 @@ wheels = [
 
 [[package]]
 name = "pure-ab-3d-mot"
-version = "0.5.0"
+version = "1.0.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "filterpy" },
@@ -2249,9 +2249,9 @@ dependencies = [
     { name = "scipy-stubs", version = "1.15.3.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version == '3.10.*'" },
     { name = "scipy-stubs", version = "1.16.3.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/d4/f3/aade96efd3e45ddaccea5c361311409bc197b4feb18d4abd1808fd3c51a0/pure_ab_3d_mot-0.5.0.tar.gz", hash = "sha256:9ca1d195771c952ab61cf4cbb1df48e86c38d1c4ea3a1a1ed281589653a6ec7a", size = 252648, upload-time = "2025-10-30T11:25:01.883Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/e9/c5/a831178c652a1635c981f37b00b460a07407da85024341a9be7f841fb04a/pure_ab_3d_mot-1.0.0.tar.gz", hash = "sha256:eb03273ff56d63ba7e3f61577c9da05e3a14d034229d2a5ea7c28cfd36bdff60", size = 253424, upload-time = "2025-10-30T14:43:35.673Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/b3/5c/938dd3a5430112c79c6b3993e5e4367461ecc881a3910d4402ff3c38304c/pure_ab_3d_mot-0.5.0-py3-none-any.whl", hash = "sha256:b1f210e680ee223359353f7784e0a8a6a1ab1f6712ee8664c378d17d94ea8ec9", size = 13974, upload-time = "2025-10-30T11:25:00.127Z" },
+    { url = "https://files.pythonhosted.org/packages/bf/f7/8f09278cd85f062459ac6dc0b8ed1bb5699a2e2e1ec83d6ae10f70c77d7d/pure_ab_3d_mot-1.0.0-py3-none-any.whl", hash = "sha256:06faee1b524118331b677386adabd363ac48d7b3eae7292d2b66fcaf6fa34931", size = 14869, upload-time = "2025-10-30T14:43:34.202Z" },
 ]
 
 [[package]]
