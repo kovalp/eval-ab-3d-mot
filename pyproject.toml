@@ -1,6 +1,6 @@
 [project]
 name = "eval-ab-3d-mot"
-version = "0.1.0"
+version = "1.0.0"
 description = "Evaluation for the Pure AB-3D-MOT."
 readme = "README.md"
 authors = [
@@ -14,7 +14,7 @@ keywords = ['tracking by detection', 'baseline for nuScenes', 'ClearMOT']
 requires-python = ">=3.8"
 dependencies = [
     "munkres>=1.1.4",
-    "pure-ab-3d-mot>=0.2.2",
+    "pure-ab-3d-mot>=1.0.0",
     "pytest-mock>=3.14.1",
     "rich>=14.2.0",
     "rich-argparse>=1.7.1",
