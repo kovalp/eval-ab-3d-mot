@@ -50,7 +50,10 @@ class TrackData(Box3D):
         self.score = score
 
     def __repr__(self) -> str:
-        return f'Track(id {self.track_id} frame {self.frame} x {self.x} y {self.y} z {self.z})'
+        return (
+            f'Track(id {self.track_id} frame {self.frame} score {self.score} '
+            f'x {self.x} y {self.y} z {self.z})'
+        )
 
     def __str__(self) -> str:
         """

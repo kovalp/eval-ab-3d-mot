@@ -439,6 +439,7 @@ class TrackingEvaluation(object):
                             cost_row.append(c)
                         else:
                             cost_row.append(max_cost)  # = 1e9
+
                     cost_matrix.append(cost_row)
                     # all ground truth trajectories are initially not associated
                     # extend ground-truth trajectories lists (merge lists)
@@ -447,6 +448,7 @@ class TrackingEvaluation(object):
 
                 if len(g) == 0:
                     cost_matrix = [[]]
+
                 # associate
                 association_matrix = hm.compute(cost_matrix)
 

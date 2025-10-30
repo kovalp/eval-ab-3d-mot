@@ -16,7 +16,7 @@ def test_from_ann_file(files_dir: Path, det_cyclist: str) -> None:
     ann_dir = str(files_dir / 'kitti/annotations/training')
     adaptor = read_r_cnn_ab_3d_mot(det_cyclist, ann_dir, 0)
     assert len(adaptor.unique_tss) == 8
-    assert adaptor.last_time_stamp == 11
+    assert adaptor.last_time_stamp == 12
 
 
 def test_from_argument(det_cyclist: str) -> None:

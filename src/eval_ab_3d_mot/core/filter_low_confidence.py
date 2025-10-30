@@ -9,6 +9,6 @@ def filter_low_confidence(
     for track_id, score_list in tracker_id_scores.items():
         average_score = sum(score_list) / len(score_list)
         id_average_score[track_id] = average_score
-        if average_score < threshold:
+        if average_score < threshold:  # <= or <
             to_delete_id.append(track_id)
     return id_average_score, to_delete_id
