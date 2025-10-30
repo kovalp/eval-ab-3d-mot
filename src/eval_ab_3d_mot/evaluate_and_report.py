@@ -1,7 +1,5 @@
 """."""
 
-
-
 from eval_ab_3d_mot.core.tracking_evaluation import TrackingEvaluation
 from eval_ab_3d_mot.raise_if_sick import raise_if_sick
 from eval_ab_3d_mot.stat import Stat
