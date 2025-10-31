@@ -59,6 +59,15 @@ wheels = [
 ]
 
 [[package]]
+name = "binary-classification-ratios"
+version = "0.3.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/63/46/3f49fd12752428032b515077fa271fb058fa66ac115884c2f39cba3631f2/binary_classification_ratios-0.3.0.tar.gz", hash = "sha256:6a7bd33ccb3ad2467109f2c9d6b590f501c2b79341c56522c0a9074050ffdec0", size = 51819, upload-time = "2025-09-04T13:55:35.521Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/1f/95/54adb9fd9ab8d68457dab00f9cbeceec8197e6ba16d23f34ffd4fb88e98b/binary_classification_ratios-0.3.0-py3-none-any.whl", hash = "sha256:f68b071c0f5a0b4f5b5a0427c43182f529322355dc50c00489cd34f2430759da", size = 5808, upload-time = "2025-09-04T13:55:34.461Z" },
+]
+
+[[package]]
 name = "bracex"
 version = "2.5.post1"
 source = { registry = "https://pypi.org/simple" }
@@ -785,6 +794,7 @@ name = "eval-ab-3d-mot"
 version = "1.0.0"
 source = { editable = "." }
 dependencies = [
+    { name = "binary-classification-ratios" },
     { name = "munkres" },
     { name = "pure-ab-3d-mot" },
     { name = "pytest-mock", version = "3.14.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.9'" },
@@ -811,6 +821,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
+    { name = "binary-classification-ratios", specifier = ">=0.3.0" },
     { name = "munkres", specifier = ">=1.1.4" },
     { name = "pure-ab-3d-mot", specifier = ">=1.0.0" },
     { name = "pytest-mock", specifier = ">=3.14.1" },

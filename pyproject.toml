@@ -13,6 +13,7 @@ keywords = ['tracking by detection', 'baseline for nuScenes', 'ClearMOT']
 
 requires-python = ">=3.8"
 dependencies = [
+    "binary-classification-ratios>=0.3.0",
     "munkres>=1.1.4",
     "pure-ab-3d-mot>=1.0.0",
     "pytest-mock>=3.14.1",
