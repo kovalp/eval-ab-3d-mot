@@ -4,6 +4,9 @@ Evaluation part of the AB3DMOT by Xinshuo Weng (https://github.com/xinshuoweng/A
 The purpose of the package is to enable calculation of the detection+tracking quality
 metrics for 3D tracking with KITTI data set.
 
+Apart from the refactored evaluation part of the AB3DMOT, a binary classifier 
+of the association outcomes is included. See `association_quality` submodule.
+
 ## Installation
 
 Should be as easy as `pip install eval-ab-3d-mot`, but if you downloaded the repo,
