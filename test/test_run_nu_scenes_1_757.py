@@ -9,6 +9,8 @@ from pure_ab_3d_mot.str_const import DETS, INFO
 from pure_ab_3d_mot.tracker import Ab3DMot
 
 from eval_ab_3d_mot.association_quality import AssociationQuality
+from eval_ab_3d_mot.cli.common.opt_param import fill_r_cnn_opt_param
+from eval_ab_3d_mot.kitti_category import KittiCategory
 
 
 def test_run_1_757(files_dir: Path) -> None:
@@ -20,6 +22,7 @@ def test_run_1_757(files_dir: Path) -> None:
 
     to_kitti = 5, 4, 3, 0, 1, 2, 6
     tracker = Ab3DMot()
+    fill_r_cnn_opt_param(KittiCategory.CAR, tracker)
     classifier = AssociationQuality()  # Classifier into TP, FP, FN, TN
     for ts_num, time_stamp in enumerate(time_stamps):
         time_stamp_mask = np.where(t_id[:, 0] == time_stamp)
