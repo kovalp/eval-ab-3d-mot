@@ -7,7 +7,6 @@ from pure_ab_3d_mot.tracker import Ab3DMot
 from rich.progress import Progress
 
 from eval_ab_3d_mot.cli.common.opt_param import fill_r_cnn_opt_param
-from eval_ab_3d_mot.cli.common.r_cnn_adaptor import read_r_cnn_ab_3d_mot
 from eval_ab_3d_mot.cli.common.single_sequence import get_tracking_result
 from eval_ab_3d_mot.cli.common.tracking_io import write_ab_3d_mot_tracking
 

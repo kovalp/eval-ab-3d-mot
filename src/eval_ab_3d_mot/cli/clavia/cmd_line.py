@@ -6,7 +6,7 @@ from typing import List, Sequence
 from rich_argparse import RawTextRichHelpFormatter
 
 from eval_ab_3d_mot.cli.common.get_hlp import get_hlp
-from eval_ab_3d_mot.cli.common.kitti_category import CATEGORIES, HLP_CATEGORY, AUTO_CATEGORY
+from eval_ab_3d_mot.cli.common.kitti_category import AUTO_CATEGORY, CATEGORIES, HLP_CATEGORY
 from eval_ab_3d_mot.kitti_category import KittiCategory
 
 
@@ -33,8 +33,9 @@ class CmdLineBatchRunWithClavIA:
 
 def get_cmd_line(args: Sequence[str]) -> CmdLineBatchRunWithClavIA:
     cli = CmdLineBatchRunWithClavIA()
-    parser = ArgumentParser(PROG, f'{PROG} <annotations> [OPTIONS]',
-                            formatter_class=RawTextRichHelpFormatter)
+    parser = ArgumentParser(
+        PROG, f'{PROG} <annotations> [OPTIONS]', formatter_class=RawTextRichHelpFormatter
+    )
     parser.add_argument('annotations', nargs='+', help='Annotation files.')
     parser.add_argument('--trk-dir', '-o', help=get_hlp(HLP_OUT, cli.trk_dir))
     hlp_category = get_hlp(HLP_CATEGORY, cli.category)
