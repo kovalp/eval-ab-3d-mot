@@ -5,7 +5,7 @@ The purpose of the package is to enable calculation of the detection+tracking qu
 metrics for 3D tracking with KITTI data set.
 
 Apart from the refactored evaluation part of the AB3DMOT, a binary classifier 
-of the association outcomes is included. See `association_quality` submodule.
+of the association outcomes is included. The corresponding CLI needs to be implemented still.
 
 ## Installation
 

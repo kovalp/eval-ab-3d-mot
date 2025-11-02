@@ -1,3 +1,7 @@
+# 2.0.0
+
+  - Use the AssociationQuality class from the package `association-quality-clavia`.
+
 # 1.0.0
 
   - Added the module `association_quality` with an implementation of the classifier.
