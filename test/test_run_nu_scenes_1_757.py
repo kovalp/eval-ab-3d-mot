@@ -4,11 +4,11 @@ from pathlib import Path
 
 import numpy as np
 
-from pure_ab_3d_mot.clavia_conventions import ANN_IDS
-from pure_ab_3d_mot.str_const import DETS, INFO
+from association_quality_clavia import AssociationQuality
+from binary_classification_ratios import BinaryClassificationRatios
+from pure_ab_3d_mot.str_const import ANN_IDS, DETS, INFO
 from pure_ab_3d_mot.tracker import Ab3DMot
 
-from eval_ab_3d_mot.association_quality import AssociationQuality
 from eval_ab_3d_mot.cli.common.opt_param import fill_r_cnn_opt_param
 from eval_ab_3d_mot.kitti_category import KittiCategory
 
@@ -34,7 +34,8 @@ def test_run_1_757(files_dir: Path) -> None:
             is_det_supplied = track.ann_id in ids_r
             classifier.classify(track.ann_id, track.upd_id, is_det_supplied)
 
-    ratios = classifier.get_classification_ratios()
+    confusion_mat = classifier.get_confusion_matrix()
+    ratios = BinaryClassificationRatios(**confusion_mat)
     print(ratios.get_summary())
     ratios.assert_min(0.78366, 1.000, 0.7789)
     assert len(tracker.trackers) == 13
