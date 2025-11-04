@@ -26,16 +26,23 @@ are now in the folder `eval-ab-3d-mot/assets`.
 ## Command-line scripts
 
 The command-line scripts are equipped with `--help` option which should be 
-sufficient to learn their usage.
+sufficient to guess their usage.
 
-### Batch run the pure AB-3D-MOT tracker 
+### Run the pure AB-3D-MOT tracker 
 
 ```
 batch-run-ab-3d-mot assets/detections/kitti/point-r-cnn-training/car/*.txt
 ```
 
-### Batch evaluation of the pure AB-3D-MOT tracker 
+### Evaluate the output of the pure AB-3D-MOT tracker using MOTA 
 
 ```
 batch-eval-ab-3d-mot assets/annotations/kitti/training/*.txt
 ```
+
+### Run the pure AB-3D-MOT tracker and assess the association quality using ClavIA 
+
+```
+batch-run-ab-3d-mot-with-clavia assets/annotations/kitti/training/*.txt
+```
+
