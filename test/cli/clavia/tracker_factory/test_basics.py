@@ -6,7 +6,7 @@ from pure_ab_3d_mot.dist_metrics import MetricKind
 from pure_ab_3d_mot.matching import MatchingAlgorithm
 from pure_ab_3d_mot.tracker import Ab3DMot
 
-from eval_ab_3d_mot.cli.clavia.cmd_line import CmdLineRunWithClavIA
+from eval_ab_3d_mot.cli.clavia.cmd_line_factory import CmdLineRunWithClavIA
 from eval_ab_3d_mot.cli.clavia.tracker_factory import get_tracker
 
 

@@ -1,6 +1,6 @@
 """."""
 
-from eval_ab_3d_mot.cli.clavia.cmd_line import AUTO, CmdLineRunWithClavIA
+from eval_ab_3d_mot.cli.clavia.cmd_line_factory import AUTO, CmdLineRunWithClavIA
 from eval_ab_3d_mot.kitti_category import KittiCategory
 
 

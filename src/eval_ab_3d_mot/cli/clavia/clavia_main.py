@@ -8,7 +8,7 @@ from pure_ab_3d_mot.tracker import ANN_IDS
 
 from eval_ab_3d_mot.cli.common.kitti_adaptor import read_kitti_ab_3d_mot
 
-from .cmd_line import get_cmd_line
+from .cmd_line_factory import get_cmd_line
 from .pry_ab_3d_mot_association import pry_association
 from .tracker_factory import get_tracker
 
