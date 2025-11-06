@@ -1,5 +1,5 @@
 """."""
-
+import numpy as np
 import pytest
 
 from eval_ab_3d_mot.cli.common.kitti_adaptor import KittiAdaptor
@@ -16,7 +16,7 @@ def test_verbosity_1(adaptor: KittiAdaptor, capsys: pytest.CaptureFixture) -> No
 
 
 def test_verbosity_2(adaptor: KittiAdaptor, capsys: pytest.CaptureFixture) -> None:
-    adaptor.time_stamps.resize(0)
+    adaptor.time_stamps = np.empty(0, int)
     adaptor.check_and_shout_eventually('file name', 2)
     # fmt: off
     ref = ('Tracking for file name\n'
