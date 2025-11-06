@@ -17,7 +17,7 @@ HLP_CAT_PRM = 'Category of to selected tracker parameters.'
 AUTO = 'auto'
 
 
-class CmdLineBatchRunWithClavIA:
+class CmdLineRunWithClavIA:
     def __init__(self) -> None:
         self.verbosity = 0
         self.annotations: List[str] = []
@@ -45,8 +45,8 @@ class CmdLineBatchRunWithClavIA:
         return sorted(self.annotations)
 
 
-def get_cmd_line(args: Sequence[str]) -> CmdLineBatchRunWithClavIA:
-    cli = CmdLineBatchRunWithClavIA()
+def get_cmd_line(args: Sequence[str]) -> CmdLineRunWithClavIA:
+    cli = CmdLineRunWithClavIA()
     parser = ArgumentParser(
         PROG, f'{PROG} <annotations> [OPTIONS]', formatter_class=RawTextRichHelpFormatter
     )
