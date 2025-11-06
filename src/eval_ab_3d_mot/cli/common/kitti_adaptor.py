@@ -26,12 +26,22 @@ class KittiAdaptor:
         detections_l: np.ndarray,
         category: KittiCategory,
     ) -> None:
+        assert detections_l.ndim == 2
+        assert detections_l.shape[1] == 7
+        self.category = category
         self.last_time_stamp = np.max(stamps_l)
         category_mask = get_category_mask(category_l, category)
         self.time_stamps = stamps_l[category_mask]
         self.ann_ids = ids_l[category_mask]
         self.detections = detections_l[category_mask]
         self.stamp_mask_buf = np.zeros(len(self.ann_ids), bool)
+
+    def check_and_shout_eventually(self, file_name: str, verbosity: int) -> None:
+        if verbosity > 0:
+            print('Tracking for', file_name)
+
+        if len(self.time_stamps) == 0 and verbosity > 1:
+            print(f'There is no objects of {self.category}, but I will continue...')
 
     def detections_3d(self) -> Iterable[Dict[str, np.ndarray]]:
         for ts in range(self.last_time_stamp + 1):

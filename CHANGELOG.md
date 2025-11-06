@@ -1,6 +1,6 @@
 # 2.1.0
 
-  - Add script `batch-run-ab-3d-mot-with-clavia` to run the tracker consuming KITTI annotations.
+  - Add script `run-ab-3d-mot-with-clavia` to run the tracker consuming KITTI annotations.
   - Use `pure-ab-3d-mot==2.1.0`.
   - Update third-party development dependencies.
 
