@@ -1,3 +1,8 @@
+# 2.2.0
+
+  - Improve the README.
+  - Add report on the tracker parameters to stdout in the ClavIA script.
+
 # 2.1.0
 
   - Add script `run-ab-3d-mot-with-clavia` to run the tracker consuming KITTI annotations.

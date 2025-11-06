@@ -26,3 +26,13 @@ def fill_r_cnn_opt_param(category: KittiCategory, tracker: Ab3DMot) -> None:
         tracker.threshold = -2.0
         tracker.min_hits = 3
         tracker.max_age = 4
+
+
+def report_tracker_parameters(tracker: Ab3DMot) -> str:
+    report = 'Ab3DMot (AB3DMOT) parameters\n'
+    report += f'    algorithm {tracker.algorithm}\n'
+    report += f'       metric {tracker.metric}\n'
+    report += f'    threshold {tracker.threshold}\n'
+    report += f'     min_hits {tracker.min_hits}\n'
+    report += f'      max_age {tracker.max_age}'
+    return report

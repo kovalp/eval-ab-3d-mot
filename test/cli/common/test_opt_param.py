@@ -6,7 +6,7 @@ from pure_ab_3d_mot.dist_metrics import MetricKind
 from pure_ab_3d_mot.matching import MatchingAlgorithm
 from pure_ab_3d_mot.tracker import Ab3DMot
 
-from eval_ab_3d_mot.cli.common.opt_param import fill_r_cnn_opt_param
+from eval_ab_3d_mot.cli.common.ab_3d_mot_parameters import fill_r_cnn_opt_param
 from eval_ab_3d_mot.kitti_category import KittiCategory
 
 
