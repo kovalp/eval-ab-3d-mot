@@ -2,7 +2,7 @@
 
 import pytest
 
-from eval_ab_3d_mot.cli.clavia.cmd_line import AUTO, get_cmd_line
+from eval_ab_3d_mot.cli.clavia.cmd_line_factory import AUTO, get_cmd_line
 from eval_ab_3d_mot.kitti_category import KittiCategory
 
 
@@ -16,6 +16,10 @@ def test_no_options(capsys: pytest.CaptureFixture) -> None:
     assert cli.category_prm == AUTO
     assert cli.category_obj == 'car'
     assert repr(cli) not in capsys.readouterr().out
+    assert cli.algorithm == AUTO
+    assert cli.metric == AUTO
+    assert cli.max_age == -1
+    assert cli.threshold == pytest.approx(1000.0)
 
 
 def test_obj_category_option() -> None:

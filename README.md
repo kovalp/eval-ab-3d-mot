@@ -43,6 +43,10 @@ batch-eval-ab-3d-mot assets/annotations/kitti/training/*.txt
 
 ### Run the pure AB-3D-MOT tracker and assess the association quality using ClavIA
 
+```
+run-ab-3d-mot-with-clavia assets/annotations/kitti/training/*.txt
+```
+
 The script runs the tracker feeding it with (KITTI) annotations.
 The result of the tracking is analysed with respect to the association accuracy.
 The script allows to select the category of the objects to track (option 
@@ -53,8 +57,7 @@ tracker *parameters*. Normally, the object category should be the same as
 parameters category. By choosing a different parameter category, one could see
 the effect of choosing different tracker parameters on the same detections.
 The parameter category can be defined via the option `--category-prm` or `-p` for short.
-If the option is absent, the parameter category will be the same as object category. 
+If the option is absent, the parameter category will be the same as object category.
 
-```
-run-ab-3d-mot-with-clavia assets/annotations/kitti/training/*.txt
-```
+Note that some of the tracker parameters (`algorithm`, `metric`, `threshold` and `max-age`)
+are possible to set via command-line options. These parameters affect the association.
