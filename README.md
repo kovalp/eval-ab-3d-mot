@@ -5,7 +5,8 @@ The purpose of the package is to enable calculation of the detection+tracking qu
 metrics for 3D tracking with KITTI data set.
 
 Apart from the refactored evaluation part of the AB3DMOT, a binary classifier 
-of the association outcomes is included. The corresponding CLI needs to be implemented still.
+of the association outcomes is included. See the section 
+[Run the pure AB-3D-MOT tracker and assess the association quality using ClavIA](#run-the-pure-ab-3d-mot-tracker-and-assess-the-association-quality-using-clavia) 
 
 ## Installation
 
@@ -40,7 +41,7 @@ batch-run-ab-3d-mot assets/detections/kitti/point-r-cnn-training/car/*.txt
 batch-eval-ab-3d-mot assets/annotations/kitti/training/*.txt
 ```
 
-### Run the pure AB-3D-MOT tracker and assess the association quality using ClavIA 
+### Run the pure AB-3D-MOT tracker and assess the association quality using ClavIA
 
 The script runs the tracker feeding it with (KITTI) annotations.
 The result of the tracking is analysed with respect to the association accuracy.

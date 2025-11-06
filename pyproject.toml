@@ -1,6 +1,6 @@
 [project]
 name = "eval-ab-3d-mot"
-version = "2.1.0"
+version = "2.1.1"
 description = "Evaluation for the Pure AB-3D-MOT."
 readme = "README.md"
 authors = [
