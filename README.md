@@ -26,16 +26,34 @@ are now in the folder `eval-ab-3d-mot/assets`.
 ## Command-line scripts
 
 The command-line scripts are equipped with `--help` option which should be 
-sufficient to learn their usage.
+sufficient to guess their usage.
 
-### Batch run the pure AB-3D-MOT tracker 
+### Run the pure AB-3D-MOT tracker 
 
 ```
 batch-run-ab-3d-mot assets/detections/kitti/point-r-cnn-training/car/*.txt
 ```
 
-### Batch evaluation of the pure AB-3D-MOT tracker 
+### Evaluate the output of the pure AB-3D-MOT tracker using MOTA 
 
 ```
 batch-eval-ab-3d-mot assets/annotations/kitti/training/*.txt
+```
+
+### Run the pure AB-3D-MOT tracker and assess the association quality using ClavIA 
+
+The script runs the tracker feeding it with (KITTI) annotations.
+The result of the tracking is analysed with respect to the association accuracy.
+The script allows to select the category of the objects to track (option 
+`--category-obj` or `-c` for short).
+
+Apart from the object category, it is possible to choose another category for
+tracker *parameters*. Normally, the object category should be the same as
+parameters category. By choosing a different parameter category, one could see
+the effect of choosing different tracker parameters on the same detections.
+The parameter category can be defined via the option `--category-prm` or `-p` for short.
+If the option is absent, the parameter category will be the same as object category. 
+
+```
+run-ab-3d-mot-with-clavia assets/annotations/kitti/training/*.txt
 ```

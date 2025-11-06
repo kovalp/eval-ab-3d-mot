@@ -1,6 +1,6 @@
 [project]
 name = "eval-ab-3d-mot"
-version = "2.0.0"
+version = "2.1.0"
 description = "Evaluation for the Pure AB-3D-MOT."
 readme = "README.md"
 authors = [
@@ -9,13 +9,14 @@ authors = [
 maintainers = [
     { name = "Peter Koval", email = "koval.peter@gmail.com" }
 ]
-keywords = ['tracking by detection', 'baseline for nuScenes', 'ClearMOT']
+keywords = ['Evaltuation of multi-object tracking',
+    'baseline for nuScenes', 'ClearMOT', 'MOTA', 'ClavIA']
 
 requires-python = ">=3.8"
 dependencies = [
     "binary-classification-ratios>=0.3.0",
     "munkres>=1.1.4",
-    "pure-ab-3d-mot>=2.0.0",
+    "pure-ab-3d-mot>=2.1.0",
     "pytest-mock>=3.14.1",
     "rich>=14.2.0",
     "rich-argparse>=1.7.1",
@@ -29,6 +30,7 @@ batch-eval-ab-3d-mot = "eval_ab_3d_mot.cli.batch_eval_ab_3d_mot.batch_eval_ab_3d
 run-ab-3d-mot = "eval_ab_3d_mot.cli.ab_3d_mot.ab_3d_mot_main:main"
 eval-ab-3d-mot = "eval_ab_3d_mot.cli.evaluate.evaluate_main:main"
 eval-ab-3d-mot-single-seq = "eval_ab_3d_mot.cli.single_sequence.single_sequence_main:main"
+run-ab-3d-mot-with-clavia = "eval_ab_3d_mot.cli.clavia.clavia_main:main"
 
 
 [project.urls]

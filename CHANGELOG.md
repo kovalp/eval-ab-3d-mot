@@ -1,3 +1,9 @@
+# 2.1.0
+
+  - Add script `run-ab-3d-mot-with-clavia` to run the tracker consuming KITTI annotations.
+  - Use `pure-ab-3d-mot==2.1.0`.
+  - Update third-party development dependencies.
+
 # 2.0.0
 
   - Use the AssociationQuality class from the package `association-quality-clavia`.

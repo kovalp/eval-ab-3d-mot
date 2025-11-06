@@ -5,11 +5,9 @@ from typing import Dict, Iterable
 
 import numpy as np
 
+from pure_ab_3d_mot.str_const import DETS, INFO
+
 from eval_ab_3d_mot.cli.common.annotation_num_frames import get_frame_number_from_ann_file
-
-
-DETS = 'dets'
-INFO = 'info'
 
 
 class RCnnAdaptor:
