@@ -8,23 +8,25 @@ from eval_ab_3d_mot.cli.common.ab_3d_mot_parameters import (
     fill_r_cnn_opt_param,
     report_tracker_parameters,
 )
+from eval_ab_3d_mot.cli.common.kitti_category import KittiCategory
+from eval_ab_3d_mot.cli.common.tracker_meta import TrackerMeta
 
-from .cmd_line_factory import AUTO, CmdLineRunWithClavIA
+from .cmd_line_factory import AUTO
 
 
-def get_tracker(cli: CmdLineRunWithClavIA) -> Ab3DMot:
+def get_tracker(category: KittiCategory, meta: TrackerMeta, verbosity=0) -> Ab3DMot:
     tracker = Ab3DMot()
-    fill_r_cnn_opt_param(cli.get_parameter_category(), tracker)
-    if cli.threshold < 999.0:
-        tracker.threshold = cli.threshold
-    if cli.max_age > 0:
-        tracker.max_age = cli.max_age
-    if cli.algorithm != AUTO:
-        tracker.algorithm = MatchingAlgorithm(cli.algorithm)
-    if cli.metric != AUTO:
-        tracker.metric = MetricKind(cli.metric)
+    fill_r_cnn_opt_param(category, tracker)
+    if meta.threshold < 999.0:
+        tracker.threshold = meta.threshold
+    if meta.max_age > 0:
+        tracker.max_age = meta.max_age
+    if meta.algorithm != AUTO:
+        tracker.algorithm = MatchingAlgorithm(meta.algorithm)
+    if meta.metric != AUTO:
+        tracker.metric = MetricKind(meta.metric)
 
-    if cli.verbosity > 1:
+    if verbosity > 1:
         print(report_tracker_parameters(tracker))
         print()
 

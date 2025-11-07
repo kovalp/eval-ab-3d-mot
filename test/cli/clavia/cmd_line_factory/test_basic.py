@@ -16,10 +16,11 @@ def test_no_options(capsys: pytest.CaptureFixture) -> None:
     assert cli.category_prm == AUTO
     assert cli.category_obj == 'car'
     assert repr(cli) not in capsys.readouterr().out
-    assert cli.algorithm == AUTO
-    assert cli.metric == AUTO
-    assert cli.max_age == -1
-    assert cli.threshold == pytest.approx(1000.0)
+    meta = cli.meta
+    assert meta.algorithm == AUTO
+    assert meta.metric == AUTO
+    assert meta.max_age == -1
+    assert meta.threshold == pytest.approx(1000.0)
 
 
 def test_obj_category_option() -> None:
