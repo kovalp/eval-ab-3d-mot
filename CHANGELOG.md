@@ -1,8 +1,10 @@
 # 2.2.0
 
   - Improve the README.
-  - Add report on the tracker parameters to stdout in the ClavIA script.
+  - Possibility to report on the tracker parameters to stdout in the ClavIA script.
   - Set tracker parameters (algorithm, metric, threshold and max_age) via options in ClavIA CLI.
+  - Set tracker parameters (algorithm, metric, threshold and max_age) via options in batch run CLI.
+  - Possibility to report on the tracker parameters to stdout in the batch run script.
 
 # 2.1.0
 

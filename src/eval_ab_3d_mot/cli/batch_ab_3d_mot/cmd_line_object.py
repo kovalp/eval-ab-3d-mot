@@ -18,6 +18,9 @@ class CmdLineBatchRunAb3dMot:
         self.category_prm = AUTO
         self.meta = TrackerMeta()
 
+    def __repr__(self) -> str:
+        return f'CmdLineBatchRunAb3dMot(category-obj {self.category_obj} parameters({self.meta}))'
+
     def get_object_category(self) -> KittiCategory:
         return get_kitti_category(self.category_obj, self.detections[0])
 
