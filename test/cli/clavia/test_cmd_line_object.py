@@ -14,7 +14,11 @@ def test_get_annotations(cli: CmdLineRunWithClavIA) -> None:
 
 
 def test_repr(cli: CmdLineRunWithClavIA) -> None:
-    assert repr(cli) == 'CmdLineBatchRunWithClavIA(category-obj car category-prm auto)'
+    ref = (
+        'CmdLineBatchRunWithClavIA(category-obj car '
+        "parameters(threshold=1000.0 max_age=-1 metric='auto' algorithm='auto'))"
+    )
+    assert repr(cli) == ref
 
 
 def test_get_object_category(cli: CmdLineRunWithClavIA) -> None:

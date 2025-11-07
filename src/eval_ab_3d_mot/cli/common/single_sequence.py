@@ -17,6 +17,6 @@ def get_tracking_result(
         tracker.track(det_dct)
         persistent_tracks = tracker.output()
         result.append(persistent_tracks)
-        if verbosity > 0:
+        if verbosity > 2:
             print(step, len(det_dct[DETS]), len(persistent_tracks))
     return result

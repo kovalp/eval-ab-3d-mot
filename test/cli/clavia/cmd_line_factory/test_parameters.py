@@ -14,10 +14,10 @@ def test_parameter_exceptions(capsys: pytest.CaptureFixture) -> None:
 
 def test_parameters(capsys: pytest.CaptureFixture) -> None:
     cli1 = get_cmd_line(['2.txt', '-a', 'greedy'])
-    assert cli1.algorithm == 'greedy'
+    assert cli1.meta.algorithm == 'greedy'
     cli2 = get_cmd_line(['2.txt', '-m', 'dist_3d'])
-    assert cli2.metric == 'dist_3d'
+    assert cli2.meta.metric == 'dist_3d'
     cli3 = get_cmd_line(['2.txt', '-x', '6'])
-    assert cli3.max_age == 6
+    assert cli3.meta.max_age == 6
     cli4 = get_cmd_line(['2.txt', '-t', '-0.567'])
-    assert cli4.threshold == pytest.approx(-0.567)
+    assert cli4.meta.threshold == pytest.approx(-0.567)
