@@ -4,14 +4,13 @@ from pure_ab_3d_mot.dist_metrics import MetricKind
 from pure_ab_3d_mot.matching import MatchingAlgorithm
 from pure_ab_3d_mot.tracker import Ab3DMot
 
+from eval_ab_3d_mot.cli.clavia.cmd_line_factory import AUTO
 from eval_ab_3d_mot.cli.common.ab_3d_mot_parameters import (
     fill_r_cnn_opt_param,
     report_tracker_parameters,
 )
 from eval_ab_3d_mot.cli.common.kitti_category import KittiCategory
 from eval_ab_3d_mot.cli.common.tracker_meta import TrackerMeta
-
-from .cmd_line_factory import AUTO
 
 
 def get_tracker(category: KittiCategory, meta: TrackerMeta, verbosity=0) -> Ab3DMot:

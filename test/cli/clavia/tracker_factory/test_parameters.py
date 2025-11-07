@@ -5,7 +5,7 @@ import pytest
 from pure_ab_3d_mot.dist_metrics import MetricKind
 from pure_ab_3d_mot.matching import MatchingAlgorithm
 
-from eval_ab_3d_mot.cli.clavia.tracker_factory import get_tracker
+from eval_ab_3d_mot.cli.common.tracker_factory import get_tracker
 from eval_ab_3d_mot.cli.common.tracker_meta import TrackerMeta
 from eval_ab_3d_mot.kitti_category import KittiCategory
 
