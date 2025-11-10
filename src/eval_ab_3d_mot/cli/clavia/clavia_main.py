@@ -24,6 +24,8 @@ def run(args: Union[Sequence[str], None] = None) -> str:
             tracker.track(dct)
             pry_association(tracker.trackers, dct[ANN_IDS], association_quality)
     ratios = BinaryClassificationRatios(**association_quality.get_confusion_matrix())
+    ratios.summary.accuracy_fmt = '.6f'
+    ratios.summary.fmt = '.4f'
     txt_summary = ratios.get_summary()
     print(txt_summary)
     return txt_summary
