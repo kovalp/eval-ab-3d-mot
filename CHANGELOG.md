@@ -6,6 +6,7 @@
   - Set tracker parameters (algorithm, metric, threshold and max_age) via options in batch run CLI.
   - Possibility to report on the tracker parameters to stdout in the batch run script.
   - The number of figures after floating point is 4 for F1, Precision and Recall and 6 for Accuracy.
+  - Report tracker parameters once, before tracking in `run-ab-3d-mot-with-clavia` and `batch-run-ab-3d-mot`.
 
 # 2.1.0
 
