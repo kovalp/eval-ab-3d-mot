@@ -9,8 +9,8 @@ def test_init(cli: CmdLineRunWithClavIA) -> None:
     assert cli.category_obj == 'car'
 
 
-def test_get_annotations(cli: CmdLineRunWithClavIA) -> None:
-    assert cli.get_annotations() == ['001.txt', '002.txt']
+def test_get_annotation_file_names(cli: CmdLineRunWithClavIA) -> None:
+    assert cli.get_annotation_file_names() == ['001.txt', '002.txt']
 
 
 def test_repr(cli: CmdLineRunWithClavIA) -> None:

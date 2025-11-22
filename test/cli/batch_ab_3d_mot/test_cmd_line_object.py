@@ -13,11 +13,11 @@ def cli() -> CmdLineBatchRunAb3dMot:
     return cli
 
 
-def test_get_detections(cli: CmdLineBatchRunAb3dMot) -> None:
-    assert cli.get_detections() == ['car/001.txt', 'car/002.txt']
+def test_get_detection_file_names(cli: CmdLineBatchRunAb3dMot) -> None:
+    assert cli.get_detection_file_names() == ['car/001.txt', 'car/002.txt']
     cli.detections = ['car/002.txt', 'pedestrian/001.txt']
     with pytest.raises(ValueError):
-        cli.get_detections()
+        cli.get_detection_file_names()
 
 
 def test_get_object_category(cli: CmdLineBatchRunAb3dMot) -> None:

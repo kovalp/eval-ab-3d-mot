@@ -20,7 +20,7 @@ def run(args: Union[Sequence[str], None] = None) -> str:
     if cli.verbosity > 1:
         print(report_tracker_parameters(get_tracker(cli.get_parameter_category(), cli.meta)))
 
-    for ann_file_name in cli.get_annotations():
+    for ann_file_name in cli.get_annotation_file_names():
         adaptor = read_kitti_ab_3d_mot(ann_file_name, cli.get_object_category())
         adaptor.check_and_shout_eventually(ann_file_name, cli.verbosity)
         tracker = get_tracker(cli.get_parameter_category(), cli.meta)
