@@ -6,8 +6,7 @@ from typing import Any, List, Union
 
 import numpy as np
 
-
-CLASS_NAMES = ['?', 'Pedestrian', 'Car', 'Cyclist']
+from eval_ab_3d_mot.kitti_category import CLASS_NAMES
 
 
 def fmt(val: Any) -> str:

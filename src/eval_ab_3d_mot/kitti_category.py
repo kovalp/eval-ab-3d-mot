@@ -4,6 +4,9 @@ from enum import Enum
 from typing import Tuple, Union
 
 
+CLASS_NAMES = ['?', 'Pedestrian', 'Car', 'Cyclist']
+
+
 class KittiCategory(Enum):
     CAR = 'car'
     CYCLIST = 'cyclist'
@@ -14,3 +17,6 @@ class KittiCategory(Enum):
             return 'Car', 'Van'
         else:
             return (self.value.capitalize(),)
+
+    def get_int_category(self) -> int:
+        return CLASS_NAMES.index(self.value.capitalize())

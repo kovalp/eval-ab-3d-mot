@@ -29,6 +29,7 @@ class KittiAdaptor:
         assert detections_l.ndim == 2
         assert detections_l.shape[1] == 7
         self.category = category
+        self.category_int = category.get_int_category()
         self.last_time_stamp = np.max(stamps_l)
         category_mask = get_category_mask(category_l, category)
         self.time_stamps = stamps_l[category_mask]
@@ -48,6 +49,7 @@ class KittiAdaptor:
             np.equal(self.time_stamps, ts, out=self.stamp_mask_buf)
             hwl_xyz_ry = self.detections[self.stamp_mask_buf]
             info = np.zeros((hwl_xyz_ry.shape[0], 8))
+            info[:, 1] = self.category_int
             ids_r = self.ann_ids[self.stamp_mask_buf]
             yield {DETS: hwl_xyz_ry, INFO: info, ANN_IDS: ids_r}
 

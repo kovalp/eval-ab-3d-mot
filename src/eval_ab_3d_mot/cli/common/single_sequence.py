@@ -14,10 +14,18 @@ def get_tracking_result(
     adaptor: RCnnAdaptor | KittiAdaptor, tracker: Ab3DMot, verbosity: int
 ) -> List[List[np.ndarray]]:
     result = []
+    if verbosity > 3:
+        np.set_printoptions(linewidth=200)
+
     for step, det_dct in enumerate(adaptor.detections_3d()):
         tracker.track(det_dct)
         persistent_tracks = tracker.output()
         result.append(persistent_tracks)
         if verbosity > 2:
             print(step, len(det_dct[DETS]), len(persistent_tracks))
+        if verbosity > 3:
+            for track in persistent_tracks:
+                print(track)
+            print()
+
     return result

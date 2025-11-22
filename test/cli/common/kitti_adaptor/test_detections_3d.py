@@ -21,9 +21,9 @@ def test_generator(adaptor: KittiAdaptor) -> None:
         assert dd[ANN_IDS].shape == (0,)
 
     assert all_detections[1][DETS] == pytest.approx(np.array([[1, 2, 3, 4, 5, 6, 7]]))
-    assert all_detections[1][INFO] == pytest.approx(np.array([[0, 0, 0, 0, 0, 0, 0, 0]]))
+    assert all_detections[1][INFO] == pytest.approx(np.array([[0, 2, 0, 0, 0, 0, 0, 0]]))
     assert all_detections[1][ANN_IDS] == pytest.approx([1])
 
     assert all_detections[2][DETS] == pytest.approx(np.array([[2, 3, 4, 5, 6, 7, 8]]))
-    assert all_detections[2][INFO] == pytest.approx(np.array([[0, 0, 0, 0, 0, 0, 0, 0]]))
+    assert all_detections[2][INFO] == pytest.approx(np.array([[0, 2, 0, 0, 0, 0, 0, 0]]))
     assert all_detections[2][ANN_IDS] == pytest.approx([2])
