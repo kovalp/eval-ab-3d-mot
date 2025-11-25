@@ -25,9 +25,12 @@ class KittiAdaptor:
         category_l: np.ndarray,
         detections_l: np.ndarray,
         category: KittiCategory,
+        info_l: np.ndarray,
     ) -> None:
         assert detections_l.ndim == 2
         assert detections_l.shape[1] == 7
+        assert info_l.ndim == 2
+        assert info_l.shape[1] == 8
         self.category = category
         self.category_int = category.get_int_category()
         self.last_time_stamp = np.max(stamps_l)
@@ -35,6 +38,10 @@ class KittiAdaptor:
         self.time_stamps = stamps_l[category_mask]
         self.ann_ids = ids_l[category_mask]
         self.detections = detections_l[category_mask]
+        self.infos = info_l[category_mask]
+        self.infos[:, 0] = -999.0
+        self.infos[:, 1] = self.category_int
+        self.infos[:, 2:6] = self.infos[:, 3:7]
         self.stamp_mask_buf = np.zeros(len(self.ann_ids), bool)
 
     def check_and_shout_eventually(self, file_name: str, verbosity: int) -> None:
@@ -48,14 +55,14 @@ class KittiAdaptor:
         for ts in range(self.last_time_stamp + 1):
             np.equal(self.time_stamps, ts, out=self.stamp_mask_buf)
             hwl_xyz_ry = self.detections[self.stamp_mask_buf]
-            info = np.zeros((hwl_xyz_ry.shape[0], 8))
-            info[:, 1] = self.category_int
+            info_r = self.infos[self.stamp_mask_buf]
             ids_r = self.ann_ids[self.stamp_mask_buf]
-            yield {DETS: hwl_xyz_ry, INFO: info, ANN_IDS: ids_r}
+            yield {DETS: hwl_xyz_ry, INFO: info_r, ANN_IDS: ids_r}
 
 
 def read_kitti_ab_3d_mot(file_name: str, category: KittiCategory) -> KittiAdaptor:
     stamps_l, ids_l = np.genfromtxt(file_name, delimiter=' ', usecols=(0, 1), dtype=int).T
     category_l = np.genfromtxt(file_name, delimiter=' ', usecols=(2,), dtype=str)
     detections_l = np.genfromtxt(file_name, delimiter=' ')[:, 10:]
-    return KittiAdaptor(stamps_l, ids_l, category_l, detections_l, category)
+    info_l = np.genfromtxt(file_name, delimiter=' ')[:, 2:10]
+    return KittiAdaptor(stamps_l, ids_l, category_l, detections_l, category, info_l)

@@ -20,4 +20,12 @@ def adaptor() -> KittiAdaptor:
             np.linspace(4, 10, num=7),
         ]
     )
-    return KittiAdaptor(stamps_l, ids_l, category_l, detections_l, KittiCategory.CAR)
+    info_l = np.array(
+        [
+            np.linspace(21, 28, num=8),
+            np.linspace(22, 29, num=8),
+            np.linspace(23, 30, num=8),
+            np.linspace(24, 31, num=8),
+        ]
+    )
+    return KittiAdaptor(stamps_l, ids_l, category_l, detections_l, KittiCategory.CAR, info_l)

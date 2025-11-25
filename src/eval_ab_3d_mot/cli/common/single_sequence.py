@@ -1,6 +1,6 @@
 """."""
 
-from typing import List
+from typing import List, Union
 
 import numpy as np
 
@@ -11,7 +11,7 @@ from eval_ab_3d_mot.cli.common.r_cnn_adaptor import DETS, RCnnAdaptor
 
 
 def get_tracking_result(
-    adaptor: RCnnAdaptor | KittiAdaptor, tracker: Ab3DMot, verbosity: int
+    adaptor: Union[RCnnAdaptor, KittiAdaptor], tracker: Ab3DMot, verbosity: int
 ) -> List[List[np.ndarray]]:
     result = []
     if verbosity > 3:
