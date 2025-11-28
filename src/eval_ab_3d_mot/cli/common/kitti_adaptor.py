@@ -39,9 +39,15 @@ class KittiAdaptor:
         self.ann_ids = ids_l[category_mask]
         self.detections = detections_l[category_mask]
         self.infos = info_l[category_mask]
-        self.infos[:, 0] = -999.0
+        self.infos[:, 0] = 0.0
         self.infos[:, 1] = self.category_int
-        self.infos[:, 2:6] = self.infos[:, 3:7]
+        self.infos[:, 2] = self.infos[:, 4]
+        tmp_data_5 = self.infos[:, 5].copy()
+        self.infos[:, 4] = self.infos[:, 6]
+        self.infos[:, 5] = self.infos[:, 7]
+        self.infos[:, 6] = 9.0123456  # hopefully this represents an absolute certainty
+        self.infos[:, 7] = self.infos[:, 3]
+        self.infos[:, 3] = tmp_data_5
         self.stamp_mask_buf = np.zeros(len(self.ann_ids), bool)
 
     def check_and_shout_eventually(self, file_name: str, verbosity: int) -> None:
