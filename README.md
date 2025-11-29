@@ -29,13 +29,25 @@ are now in the folder `eval-ab-3d-mot/assets`.
 The command-line scripts are equipped with `--help` option which should be 
 sufficient to guess their usage.
 
-### Run the pure AB-3D-MOT tracker 
+### Run the pure AB-3D-MOT tracker
 
 ```
 batch-run-ab-3d-mot assets/detections/kitti/point-r-cnn-training/car/*.txt
 ```
 
-### Evaluate the output of the pure AB-3D-MOT tracker using MOTA 
+Apart from the detections, the `pure-ab-3d-mot` tracker could be fed with KITTI annotations.
+
+```
+batch-run-ab-3d-mot-annotations assets/annotations/kitti/training/*.txt
+```
+
+By default, the car category is selected.
+
+In both cases, consuming detections or annotations, the output is stored into text files.
+The output of the tracker could be evaluated with ClearMOT metric.
+
+
+### Evaluate the output of the pure AB-3D-MOT tracker using ClearMOT metric 
 
 ```
 batch-eval-ab-3d-mot assets/annotations/kitti/training/*.txt

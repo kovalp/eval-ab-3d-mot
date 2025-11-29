@@ -30,10 +30,9 @@ HLP_MAX = 'Maximal number of steps without association.'
 def get_cmd_line(args: Sequence[str]) -> CmdLineRunWithClavIA:
     cli = CmdLineRunWithClavIA()
     # fmt: off
-    parser = ArgumentParser(PROG, f'{PROG} <annotations> [OPTIONS]',
-                            formatter_class=RawTextRichHelpFormatter)
+    parser = ArgumentParser(PROG, f'{PROG} <annotations> [OPTIONS]', formatter_class=RawTextRichHelpFormatter)
     # fmt: on
-    parser.add_argument('annotations', nargs='+', help='Annotation files.')
+    parser.add_argument('annotations', nargs='+', help='KITTI annotation files.')
 
     cc_oo = tuple(c.value for c in KittiCategory)
     hlp_c_obj = get_hlp(HLP_CAT_OBJ, cli.category_obj)

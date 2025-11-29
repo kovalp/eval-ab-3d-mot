@@ -31,7 +31,7 @@ class CmdLineBatchRunAb3dMot:
             result = KittiCategory(self.category_prm)
         return result
 
-    def get_detections(self) -> List[str]:
+    def get_detection_file_names(self) -> List[str]:
         if len(set(Path(d).parent for d in self.detections)) > 1:
             raise ValueError('I expect the detection files to be in the same directory.')
         return sorted(self.detections)

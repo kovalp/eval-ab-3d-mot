@@ -2,17 +2,17 @@
 
 from pathlib import Path
 
-from eval_ab_3d_mot.cli.batch_ab_3d_mot.batch_ab_3d_mot_main import run
+from eval_ab_3d_mot.cli.batch_ab_3d_mot_annotations.batch_ab_3d_mot_annotations_main import run
 
 
 def test_run(files_dir: Path, tmp_path: Path) -> None:
     # fmt: off
     args = [
-        str(files_dir / 'kitti/detections/point-r-cnn-training/cyclist/0000.txt'),
-        str(files_dir / 'kitti/detections/point-r-cnn-training/cyclist/0012.txt'),
+        str(files_dir / 'kitti/annotations/training/0000.txt'),
+        str(files_dir / 'kitti/annotations/training/0012.txt'),
         '-vv',
         '-o', 'tracking-results',
-        '--ann-dir', str(files_dir / 'kitti/annotations/training')
+        '-c', 'cyclist'
     ]
     # fmt: on
     assert run(args)
