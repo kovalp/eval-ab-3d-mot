@@ -50,7 +50,7 @@ def evaluate(
         e.load_data(is_ground_truth=True)  # load ground-truth data for this class
         suffix = 'eval_3d' if eval_3diou else 'eval_2d'
         filename = os.path.join(e.t_path, '../summary_%s_average_%s.txt' % (c, suffix))
-        evaluate_and_report(e, result_sha, filename)
+        evaluate_and_report(e, result_sha, filename, False)
 
     # finish
     if len(classes) == 0:

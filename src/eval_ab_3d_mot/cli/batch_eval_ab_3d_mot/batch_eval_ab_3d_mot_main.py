@@ -28,7 +28,7 @@ def run(args: Union[Sequence[str], None] = None) -> bool:
     eval_category_label_dir.mkdir(parents=True, exist_ok=True)
     print('eval_category_label_dir', eval_category_label_dir)
     out_path = eval_category_label_dir / 'batch-eval-ab-3d-mot-result.txt'
-    evaluate_and_report(trk_eval, cli.label, str(out_path))
+    evaluate_and_report(trk_eval, cli.label, str(out_path), cli.skip_maximizing_threshold)
     return True
 
 
