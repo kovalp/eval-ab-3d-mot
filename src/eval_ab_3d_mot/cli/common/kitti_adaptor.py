@@ -45,7 +45,7 @@ class KittiAdaptor:
         tmp_data_5 = self.infos[:, 5].copy()
         self.infos[:, 4] = self.infos[:, 6]
         self.infos[:, 5] = self.infos[:, 7]
-        self.infos[:, 6] = 9.0123456  # hopefully this represents an absolute certainty
+        self.infos[:, 6] = 1.234567  # hopefully this represents an absolute certainty
         self.infos[:, 7] = self.infos[:, 3]
         self.infos[:, 3] = tmp_data_5
         self.stamp_mask_buf = np.zeros(len(self.ann_ids), bool)

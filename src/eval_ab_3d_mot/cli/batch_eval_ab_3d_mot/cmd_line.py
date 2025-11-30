@@ -16,6 +16,9 @@ HLP_OUT = 'Directory to store evaluation results.'
 HLP_TRK = 'The root directory with tracking results.'
 HLP_LBL = 'A custom label to distinguish this evaluation.'
 HLP_THR = 'Threshold used for association in MOTA / ClearMOT.'
+HLP_SMR = (
+    'Skip maximizing association threshold.Recommended when evaluating the tracking of annotations.'
+)
 
 
 class CmdLineBatchEvalAb3dMot:
@@ -27,6 +30,7 @@ class CmdLineBatchEvalAb3dMot:
         self.category = CATEGORIES[0]
         self.label = 'batch-eval'
         self.threshold: float = 0.25
+        self.skip_maximizing_threshold: bool = False
 
     def get_category(self) -> KittiCategory:
         return KittiCategory(self.category)
@@ -53,6 +57,12 @@ def get_cmd_line(args: Sequence[str]) -> CmdLineBatchEvalAb3dMot:
     parser.add_argument('--eval-dir', '-o', help=get_hlp(HLP_OUT, cli.eval_dir))
     parser.add_argument('--label', '-l', help=get_hlp(HLP_LBL, cli.label))
     parser.add_argument('--threshold', '-t', type=float, help=get_hlp(HLP_THR, cli.threshold))
+    parser.add_argument(
+        '--skip-maximizing-threshold',
+        '-ann',
+        action='store_true',
+        help=get_hlp(HLP_SMR, cli.skip_maximizing_threshold),
+    )
     parser.add_argument(
         '--category', '-c', choices=CATEGORIES, help=get_hlp(HLP_CATEGORY, cli.category)
     )
