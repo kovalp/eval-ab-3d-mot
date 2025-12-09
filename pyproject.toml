@@ -1,6 +1,6 @@
 [project]
 name = "eval-ab-3d-mot"
-version = "2.1.1"
+version = "2.2.1"
 description = "Evaluation for the Pure AB-3D-MOT."
 readme = "README.md"
 authors = [
@@ -9,7 +9,7 @@ authors = [
 maintainers = [
     { name = "Peter Koval", email = "koval.peter@gmail.com" }
 ]
-keywords = ['Evaltuation of multi-object tracking',
+keywords = ['Evaluation of multi-object tracking',
     'baseline for nuScenes', 'ClearMOT', 'MOTA', 'ClavIA']
 
 requires-python = ">=3.8"

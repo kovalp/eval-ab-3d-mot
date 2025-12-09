@@ -53,7 +53,7 @@ The output of the tracker could be evaluated with ClearMOT metric.
 batch-eval-ab-3d-mot assets/annotations/kitti/training/*.txt
 ```
 
-### Run the pure AB-3D-MOT tracker and assess the association quality using ClavIA
+### Run the pure AB-3D-MOT tracker and evaluate the association quality using ClavIA
 
 ```
 run-ab-3d-mot-with-clavia assets/annotations/kitti/training/*.txt
