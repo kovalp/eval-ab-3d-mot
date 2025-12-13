@@ -50,6 +50,9 @@ dev = [
     "pytest-cov>=5.0.0",
     "ruff>=0.14.0",
 ]
+docs = [
+    "sphinx>=7.1.2",
+]
 
 [build-system]
 requires = ["hatchling >= 1.26"]
