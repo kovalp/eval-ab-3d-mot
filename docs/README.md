@@ -32,7 +32,7 @@ run-ab-3d-mot-with-clavia --help
 
 produces
 
-<img src="https://github.com/kovalp/eval-ab-3d-mot/blob/main/assets/help-usage.png" width="1030" alt="help-usage">
+<img src="help-usage.png" width="1030" alt="help-usage">
 
 ## Compute F1-scores 
 
