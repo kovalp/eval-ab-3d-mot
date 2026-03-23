@@ -2,7 +2,7 @@
 name = "eval-ab-3d-mot"
 version = "2.2.2"
 description = "Evaluation for the Pure AB-3D-MOT."
-readme = "README.md"
+readme = "docs/README.md"
 authors = [
     { name = "Xinshuo Weng", email = "xinshuo.weng@gmail.com" }
 ]
