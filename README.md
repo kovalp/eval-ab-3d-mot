@@ -1,27 +1,46 @@
 # Evaluation of a base of 3D multiple-object tracking (AB3DMOT) 
 
 Evaluation part of the AB3DMOT by Xinshuo Weng [original repository](https://github.com/xinshuoweng/AB3DMOT).
-The package dedicated to calculation of the detection+tracking quality metrics for
-3D tracking with KITTI data set. Apart from the refactored evaluation part of the AB3DMOT,
+The package is dedicated to calculation of the tracking quality metrics for 3D tracking
+with KITTI data set. Apart from the refactored evaluation part of the AB3DMOT, 
 a binary *Cla*ssifier of the tracking results *v*ia *I*nstrumented *A*ssociation (ClavIA)
-can be used on the same tracker. Using the codes from this repository, 
+can be used on the same tracker.
+
+## Supporting publication
+
+Using the codes from this repository, the user can reproduce the results of the publication
+"Simple evaluation of association quality in tracking-by-detection",
+by Peter Koval, Nerea Aranjuelo Ansa, Particia Javierre del Rio, and Ainhoa Menendez Arechalde.
 
 ## Installation
 
-Clone the repository, then `uv sync` standing in the root folder of the repository.
+Clone the repository, then execute `uv sync` standing in the root folder of the repository.
 Note that you might need to [install the package manager `uv`](https://docs.astral.sh/uv/) by 
-Astral Software Inc.
+Astral Software Inc. After installation a number of entry points are exposed in the 
+shell. To reproduce the results of the [Supporting publication](#supporting-publication)
+the following command-line scripts are used
 
-## Download the detections & annotations
+  - `run-ab-3d-mot-with-clavia`
+  - `batch-run-ab-3d-mot`
+  - `batch-run-ab-3d-mot-annotations`
 
-Should be as easy as
+The entry points expose the `--help` option producing brief usage descriptions. For example,
+
+```shell
+run-ab-3d-mot-with-clavia --help
+```
+
+produces
+
+<img src="https://kovalp.github.io/eval-ab-3d-mot/assets/help-usage.png" width="192" alt="logo">
+
+## Compute F1-scores 
+
+To compute the F1 scores with ClavIA, please run
+
+```shell
 
 ```
-git clone https://github.com/kovalp/eval-ab-3d-mot.git
-```
-
-The detections (R-CNN) and annotations (training subset of KITTI)
-are now in the folder `eval-ab-3d-mot/assets`.
 
 ## Command-line scripts
 
