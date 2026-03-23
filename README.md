@@ -1,28 +1,74 @@
 # Evaluation of a base of 3D multiple-object tracking (AB3DMOT) 
 
-Evaluation part of the AB3DMOT by Xinshuo Weng (https://github.com/xinshuoweng/AB3DMOT)
-The purpose of the package is to enable calculation of the detection+tracking quality
-metrics for 3D tracking with KITTI data set.
+Evaluation part of the AB3DMOT by Xinshuo Weng [original repository](https://github.com/xinshuoweng/AB3DMOT).
+The package is dedicated to calculation of the tracking quality metrics for 3D tracking
+with KITTI data set. Apart from the refactored evaluation part of the AB3DMOT, 
+a binary *Cla*ssifier of the tracking results *v*ia *I*nstrumented *A*ssociation (ClavIA)
+can be used on the same tracker.
 
-Apart from the refactored evaluation part of the AB3DMOT, a binary classifier 
-of the association outcomes is included. See the section 
-[Run the pure AB-3D-MOT tracker and assess the association quality using ClavIA](#run-the-pure-ab-3d-mot-tracker-and-assess-the-association-quality-using-clavia) 
+## Supporting publication
+
+Using the codes from this repository, the user can reproduce the results of the publication
+"Simple evaluation of association quality in tracking-by-detection",
+by Peter Koval, Nerea Aranjuelo Ansa, Particia Javierre del Rio, and Ainhoa Menendez Arechalde.
 
 ## Installation
 
-Should be as easy as `pip install eval-ab-3d-mot`, but if you downloaded the repo,
-then `uv sync` standing in the root folder.
+Clone the repository, then execute `uv sync` standing in the root folder of the repository.
+Note that you might need to [install the package manager `uv`](https://docs.astral.sh/uv/) by 
+Astral Software Inc. After installation a number of entry points are exposed in the 
+shell. To reproduce the results of the [Supporting publication](#supporting-publication)
+the following command-line scripts are used
 
-## Download the detections & annotations
+  - `run-ab-3d-mot-with-clavia`
+  - `batch-run-ab-3d-mot`
+  - `batch-run-ab-3d-mot-annotations`
 
-Should be as easy as
+The entry points expose the `--help` option producing brief usage descriptions. For example,
 
+```shell
+run-ab-3d-mot-with-clavia --help
 ```
-git clone https://github.com/kovalp/eval-ab-3d-mot.git
+
+produces
+
+<img src="https://kovalp.github.io/eval-ab-3d-mot/assets/help-usage.png" width="192" alt="help-usage">
+
+## Compute F1-scores 
+
+To compute the F1 scores with ClavIA, please run
+
+```shell
+run-ab-3d-mot-with-clavia assets/annotations/kitti/training/*.txt
 ```
 
-The detections (R-CNN) and annotations (training subset of KITTI)
-are now in the folder `eval-ab-3d-mot/assets`.
+This command executes the instrumented AB-3D-MOT tracker consuming KITTI annotations.
+The output of the tracking is evaluated using ClavIA methodology. After a minute 
+the script should produce 
+
+```terminaloutput
+Confusion matrix TP 30601 TN 592 FP 0 FN 70
+     accuracy 0.997761
+    precision 1.0000
+       recall 0.9977
+     f1-score 0.9989
+```
+
+By default, a *car* object category is selected. To select the *cyclist* or *pedestrian*
+category, use the option `--category-obj`, or `-c` for short
+
+```shell
+run-ab-3d-mot-with-clavia assets/annotations/kitti/training/*.txt -c cyclist
+```
+
+This time, the script runs faster and produces 
+
+```terminaloutput
+     ...
+     f1-score 0.9969
+```
+
+
 
 ## Command-line scripts
 
