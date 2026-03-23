@@ -1069,7 +1069,7 @@ wheels = [
 
 [[package]]
 name = "eval-ab-3d-mot"
-version = "2.2.1"
+version = "2.2.2"
 source = { editable = "." }
 dependencies = [
     { name = "binary-classification-ratios" },
