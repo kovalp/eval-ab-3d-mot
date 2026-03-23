@@ -1,17 +1,16 @@
 # Evaluation of a base of 3D multiple-object tracking (AB3DMOT) 
 
-Evaluation part of the AB3DMOT by Xinshuo Weng (https://github.com/xinshuoweng/AB3DMOT)
-The purpose of the package is to enable calculation of the detection+tracking quality
-metrics for 3D tracking with KITTI data set.
-
-Apart from the refactored evaluation part of the AB3DMOT, a binary classifier 
-of the association outcomes is included. See the section 
-[Run the pure AB-3D-MOT tracker and assess the association quality using ClavIA](#run-the-pure-ab-3d-mot-tracker-and-assess-the-association-quality-using-clavia) 
+Evaluation part of the AB3DMOT by Xinshuo Weng [original repository](https://github.com/xinshuoweng/AB3DMOT).
+The package dedicated to calculation of the detection+tracking quality metrics for
+3D tracking with KITTI data set. Apart from the refactored evaluation part of the AB3DMOT,
+a binary *Cla*ssifier of the tracking results *v*ia *I*nstrumented *A*ssociation (ClavIA)
+can be used on the same tracker. Using the codes from this repository, 
 
 ## Installation
 
-Should be as easy as `pip install eval-ab-3d-mot`, but if you downloaded the repo,
-then `uv sync` standing in the root folder.
+Clone the repository, then `uv sync` standing in the root folder of the repository.
+Note that you might need to [install the package manager `uv`](https://docs.astral.sh/uv/) by 
+Astral Software Inc.
 
 ## Download the detections & annotations
 
