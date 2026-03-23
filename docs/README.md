@@ -16,7 +16,8 @@ by Peter Koval, Nerea Aranjuelo Ansa, Particia Javierre del Rio, and Ainhoa Mene
 
 ## Installation
 
-Clone the repository, then execute `uv sync` standing in the root folder of the repository.
+[Clone the repository](https://github.com/kovalp/eval-ab-3d-mot),
+then execute `uv sync` standing in the root folder.
 Note that you might need to [install the package manager `uv`](https://docs.astral.sh/uv/) by 
 Astral Software Inc. After installation a number of entry points are exposed in the 
 shell. To reproduce the results of the [Supporting publication](#supporting-publication)
