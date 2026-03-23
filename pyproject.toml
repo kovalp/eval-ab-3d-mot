@@ -38,7 +38,7 @@ run-ab-3d-mot-with-clavia = "eval_ab_3d_mot.cli.clavia.clavia_main:main"
 
 [project.urls]
 Repository = "https://github.com/kovalp/eval-ab-3d-mot"
-ChangeLog = "https://github.com/kovalp/eval-ab-3d-mot/blob/main/CHANGELOG.md"
+ChangeLog = "https://kovalp.github.io/eval-ab-3d-mot/CHANGELOG"
 
 [tool.uv]
 package = true

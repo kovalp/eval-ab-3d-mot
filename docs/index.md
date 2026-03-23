@@ -8,6 +8,6 @@ The package provides a set of algorithms to evaluate the trackers by detection
 using ClearMOT and ClavIA methodologies.
 
 ## Contents
-  - [README](README)
+  - [README](README.md)
   - [CHANGELOG](CHANGELOG)
 
