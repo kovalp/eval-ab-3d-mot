@@ -1,5 +1,7 @@
 # Evaluation of a base of 3D multiple-object tracking (AB3DMOT) 
 
+<img src="logo-vicomtech.svg" width="192" alt="logo">
+
 Evaluation part of the AB3DMOT by Xinshuo Weng [original repository](https://github.com/xinshuoweng/AB3DMOT).
 The package is dedicated to calculation of the tracking quality metrics for 3D tracking
 with KITTI data set. Apart from the refactored evaluation part of the AB3DMOT, 
