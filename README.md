@@ -32,15 +32,43 @@ run-ab-3d-mot-with-clavia --help
 
 produces
 
-<img src="https://kovalp.github.io/eval-ab-3d-mot/assets/help-usage.png" width="192" alt="logo">
+<img src="https://kovalp.github.io/eval-ab-3d-mot/assets/help-usage.png" width="192" alt="help-usage">
 
 ## Compute F1-scores 
 
 To compute the F1 scores with ClavIA, please run
 
 ```shell
-
+run-ab-3d-mot-with-clavia assets/annotations/kitti/training/*.txt
 ```
+
+This command executes the instrumented AB-3D-MOT tracker consuming KITTI annotations.
+The output of the tracking is evaluated using ClavIA methodology. After a minute 
+the script should produce 
+
+```terminaloutput
+Confusion matrix TP 30601 TN 592 FP 0 FN 70
+     accuracy 0.997761
+    precision 1.0000
+       recall 0.9977
+     f1-score 0.9989
+```
+
+By default, a *car* object category is selected. To select the *cyclist* or *pedestrian*
+category, use the option `--category-obj`, or `-c` for short
+
+```shell
+run-ab-3d-mot-with-clavia assets/annotations/kitti/training/*.txt -c cyclist
+```
+
+This time, the script runs faster and produces 
+
+```terminaloutput
+     ...
+     f1-score 0.9969
+```
+
+
 
 ## Command-line scripts
 
