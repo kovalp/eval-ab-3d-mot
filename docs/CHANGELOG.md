@@ -1,3 +1,10 @@
+# CHANGELOG
+
+# 2.2.3
+
+  - Add VicomTech logo to the README.
+  - Make the usage screenshot visible on PyPI.
+
 # 2.2.2
 
   - Spell out all necessary options for results' reproducibility in the README.

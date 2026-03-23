@@ -1,6 +1,6 @@
 # Evaluation of a base of 3D multiple-object tracking (AB3DMOT) 
 
-<img src="logo-vicomtech.svg" width="192" alt="logo">
+<img src="https://kovalp.github.io/eval-ab-3d-mot/logo-vicomtech.svg" width="192" alt="logo">
 
 Evaluation part of the AB3DMOT by Xinshuo Weng [original repository](https://github.com/xinshuoweng/AB3DMOT).
 The package is dedicated to calculation of the tracking quality metrics for 3D tracking
