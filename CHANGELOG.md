@@ -1,3 +1,7 @@
+# 2.2.2
+
+  - Spell out all necessary options for results' reproducibility in the README.
+
 # 2.2.0
 
   - Improve the README.
