@@ -1,5 +1,7 @@
 # Evaluation of a base of 3D multiple-object tracking (AB3DMOT) 
 
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+
 <img src="https://kovalp.github.io/eval-ab-3d-mot/logo-vicomtech.svg" width="192" alt="logo">
 
 Evaluation part of the AB3DMOT by Xinshuo Weng [original repository](https://github.com/xinshuoweng/AB3DMOT).
@@ -11,8 +13,11 @@ can be used on the same tracker.
 ## Supporting publication
 
 Using the codes from this repository, the user can reproduce the results of the publication
-"Simple evaluation of association quality in tracking-by-detection",
-by Peter Koval, Nerea Aranjuelo Ansa, Particia Javierre del Rio, and Ainhoa Menendez Arechalde.
+["Simple evaluation of association quality in tracking-by-detection",
+by Peter Koval, Nerea Aranjuelo Ansa, Particia Javierre del Rio, and Ainhoa Menendez Arechalde.](
+https://www.researchsquare.com/article/rs-9150527/latest
+)
+
 
 ## Installation
 
