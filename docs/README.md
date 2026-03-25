@@ -1,5 +1,6 @@
 # Evaluation of a base of 3D multiple-object tracking (AB3DMOT) 
 
+[![Preprint](https://img.shields.io/badge/Preprint-Research%20Square-blue)](https://www.researchsquare.com/article/rs-9150527/latest)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
 <img src="https://kovalp.github.io/eval-ab-3d-mot/logo-vicomtech.svg" width="192" alt="logo">
@@ -13,11 +14,7 @@ can be used on the same tracker.
 ## Supporting publication
 
 Using the codes from this repository, the user can reproduce the results of the publication
-["Simple evaluation of association quality in tracking-by-detection",
-by Peter Koval, Nerea Aranjuelo Ansa, Particia Javierre del Rio, and Ainhoa Menendez Arechalde.](
-https://www.researchsquare.com/article/rs-9150527/latest
-)
-
+[ClavIA](#citation).
 
 ## Installation
 
@@ -187,5 +184,22 @@ each experiment
 
 ```shell
 rm -rf tracking-kitti/ evaluation-kitti/
+```
+
+## Citation
+
+If you use this work, please cite:
+
+```biblatex
+@online{clavia_2026,
+  title = {Simple evaluation of association quality in tracking by detection},
+  url = {https://www.researchsquare.com/article/rs-9150527/latest},
+  doi = {https://dx.doi.org/10.21203/rs.3.rs-9150527/v1},
+  abstract = {Evaluating multiple-object trackers is challenging due to the variable number of quantities involved and the mixed discrete--continuum nature of the problem. Existing methodologies primarily address detection and tracking challenges. These challenges aim at the whole computer-vision pipelines as opposed to sole tracker algorithms. Modern tracker algorithms can get sophisticated enough to merit stand-alone analysis. The most critical part of the tracker is an association procedure. The outcome of the association procedure affects the tracking quality almost entirely. We propose a simple quality assessment framework to probe the association quality of trackers. The framework relies on a minimal, query-oriented instrumentation of the tracker. The instrumentation exposes the tracker internal association decisions allowing for a binary classification of the detection-target matches. The proposed methodology is easy to implement, requires little computational overhead and agrees with the well known ClearMOT metrics. The comparison is demonstrated through the open-source, ready-to-use software packages we provide.},
+  eprint = {10.21203/rs.3.rs-9150527}
+  eprinttype = {Research Square},
+  author = {Koval, Peter and Aranjuelo Ansa, Nerea and Javierre del Rio, Patricia and Menendez Arechalde, Ainhoa},
+  year = {2026},
+}
 ```
 
