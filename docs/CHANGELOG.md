@@ -1,5 +1,12 @@
 # CHANGELOG
 
+# 2.2.6
+
+  - Add badges: license and preprint.
+  - Improve the README.
+  - Define the license in the `pyproject.toml`
+
+
 # 2.2.3
 
   - Add VicomTech logo to the README.
