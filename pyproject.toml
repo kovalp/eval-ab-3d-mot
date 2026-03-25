@@ -12,6 +12,8 @@ maintainers = [
 keywords = ['Evaluation of multi-object tracking',
     'baseline for nuScenes', 'ClearMOT', 'MOTA', 'ClavIA']
 
+license = "MIT"
+
 requires-python = ">=3.8"
 dependencies = [
     "binary-classification-ratios>=0.3.0",

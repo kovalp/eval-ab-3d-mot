@@ -1,7 +1,7 @@
 # Evaluation of a base of 3D multiple-object tracking (AB3DMOT) 
 
 [![Preprint](https://img.shields.io/badge/Preprint-Research%20Square-blue)](https://www.researchsquare.com/article/rs-9150527/latest)
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](https://kovalp.github.io/eval-ab-3d-mot/LICENSE)
 
 <img src="https://kovalp.github.io/eval-ab-3d-mot/logo-vicomtech.svg" width="192" alt="logo">
 
