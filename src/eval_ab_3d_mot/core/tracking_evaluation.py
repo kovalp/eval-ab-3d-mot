@@ -696,7 +696,7 @@ class TrackingEvaluation(object):
             self.n_igts.append(seqigt)
             self.n_itrs.append(seqitr)
 
-        # compute MT/PT/ML, fragments, idswitches for all groundtruth trajectories
+        # compute MT/PT/ML, fragments, id switches for all groundtruth trajectories
         n_ignored_tr_total = self.bump_clear_mot(f)
         self.compute_mt_ml_pt(n_ignored_tr_total)
         self.compute_f1()
@@ -709,7 +709,7 @@ class TrackingEvaluation(object):
         return True
 
     def bump_clear_mot(self, f: int) -> int:
-        # compute MT/PT/ML, fragments, idswitches for all groundtruth trajectories
+        # compute MT/PT/ML, fragments, id switches for all groundtruth trajectories
         n_ignored_tr_total = 0
         for seq_idx, (seq_trajectories, seq_ignored) in enumerate(
             zip(self.gt_trajectories, self.ign_trajectories)

@@ -17,7 +17,8 @@ HLP_TRK = 'The root directory with tracking results.'
 HLP_LBL = 'A custom label to distinguish this evaluation.'
 HLP_THR = 'Threshold used for association in MOTA / ClearMOT.'
 HLP_SMR = (
-    'Skip maximizing association threshold.Recommended when evaluating the tracking of annotations.'
+    'Skip maximizing association threshold. '
+    'Recommended when evaluating the tracking of annotations.'
 )
 
 

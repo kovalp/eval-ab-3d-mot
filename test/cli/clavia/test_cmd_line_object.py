@@ -16,7 +16,8 @@ def test_get_annotation_file_names(cli: CmdLineRunWithClavIA) -> None:
 def test_repr(cli: CmdLineRunWithClavIA) -> None:
     ref = (
         'CmdLineBatchRunWithClavIA(category-obj car '
-        "parameters(threshold=1000.0 max_age=-1 metric='auto' algorithm='auto'))"
+        "parameters(threshold=1000.0 max_age=-1 metric='auto' algorithm='auto' "
+        'measurement_std_dev=1.0 proc_std_dev=1.0 proc_vel_std_dev=0.1))'
     )
     assert repr(cli) == ref
 

@@ -22,4 +22,8 @@ def get_tracker(category: KittiCategory, meta: TrackerMeta) -> Ab3DMot:
     if meta.metric != AUTO:
         tracker.metric = MetricKind(meta.metric)
 
+    tracker.measurement_std_dev = meta.measurement_std_dev
+    tracker.proc_std_dev = meta.proc_std_dev
+    tracker.proc_vel_std_dev = meta.proc_vel_std_dev
+
     return tracker
