@@ -39,7 +39,7 @@ def add_args(parser: ArgumentParser) -> None:
     mm = tuple(c.value for c in MetricKind if c != MetricKind.UNKNOWN) + (AUTO,)
     parser.add_argument('--metric', '-m', choices=mm, help=get_hlp(HLP_MET, DEF_POLICY))
     parser.add_argument(
-        '--measurement-std-dev', type=float, help=get_hlp(HLP_R_STD_DEV, DEF_POLICY)
+        '--measurement-std-dev', type=float, help=get_hlp(HLP_R_STD_DEV, 1.0)
     )
-    parser.add_argument('--proc-std-dev', type=float, help=get_hlp(HLP_Q_STD_DEV, DEF_POLICY))
-    parser.add_argument('--proc-vel-std-dev', type=float, help=get_hlp(HLP_QV_STD_DEV, DEF_POLICY))
+    parser.add_argument('--proc-std-dev', type=float, help=get_hlp(HLP_Q_STD_DEV, 1.0))
+    parser.add_argument('--proc-vel-std-dev', type=float, help=get_hlp(HLP_QV_STD_DEV, 0.1))
