@@ -2,7 +2,8 @@
 
 # 2.3.0
 
-  - Add CLI options to control the Kalman covariances. 
+  - Add CLI options to control the Kalman covariances.
+  - Increased the number of reported figures by 2.
 
 # 2.2.6
 
