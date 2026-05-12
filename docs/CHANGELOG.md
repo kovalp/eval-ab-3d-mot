@@ -1,5 +1,10 @@
 # CHANGELOG
 
+# 2.3.0
+
+  - Add CLI options to control the Kalman covariances.
+  - Increased the number of reported figures by 2.
+
 # 2.2.6
 
   - Add badges: license and preprint.

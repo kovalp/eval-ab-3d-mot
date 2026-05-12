@@ -21,6 +21,9 @@ def test_no_options(capsys: pytest.CaptureFixture) -> None:
     assert meta.metric == AUTO
     assert meta.max_age == -1
     assert meta.threshold == pytest.approx(1000.0)
+    assert meta.proc_vel_std_dev == pytest.approx(0.1)
+    assert meta.proc_std_dev == pytest.approx(1.0)
+    assert meta.measurement_std_dev == pytest.approx(1.0)
 
 
 def test_obj_category_option() -> None:
@@ -38,3 +41,19 @@ def test_both_category_options() -> None:
 def test_if_verbose(capsys: pytest.CaptureFixture) -> None:
     cli = get_cmd_line(['2.txt', '1.txt', '-v'])
     assert repr(cli) in capsys.readouterr().out
+
+
+def test_kf_cov() -> None:
+    args = [
+        'car/0001.txt',
+        '--measurement-std-dev',
+        '1.23',
+        '--proc-std-dev',
+        '4.56',
+        '--proc-vel-std-dev',
+        '7.89',
+    ]
+    meta = get_cmd_line(args).meta
+    assert meta.measurement_std_dev == pytest.approx(1.23)
+    assert meta.proc_std_dev == pytest.approx(4.56)
+    assert meta.proc_vel_std_dev == pytest.approx(7.89)
