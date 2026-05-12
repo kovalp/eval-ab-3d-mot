@@ -7,16 +7,16 @@ def test_create_summary_details(te_sum: TrackingEvaluation) -> None:
     """."""
     summary = te_sum.create_summary_details()
     ref = """=================evaluation: best results with single threshold=================
-Multiple Object Tracking Accuracy (MOTA)                                  0.2000
-Multiple Object Tracking Precision (MOTP)                                 0.3000
-Multiple Object Tracking Accuracy (MOTAL)                                 0.4000
-Multiple Object Detection Accuracy (MODA)                                 0.5000
-Multiple Object Detection Precision (MODP)                                1.6000
+Multiple Object Tracking Accuracy (MOTA)                                0.200000
+Multiple Object Tracking Precision (MOTP)                               0.300000
+Multiple Object Tracking Accuracy (MOTAL)                               0.400000
+Multiple Object Detection Accuracy (MODA)                               0.500000
+Multiple Object Detection Precision (MODP)                              1.600000
 
-Recall                                                                    0.9000
-Precision                                                                 0.8000
-F1                                                                        0.6000
-False Alarm Rate                                                          0.7000
+Recall                                                                  0.900000
+Precision                                                               0.800000
+F1                                                                      0.600000
+False Alarm Rate                                                        0.700000
 
 Mostly Tracked                                                                45
 Partly Tracked                                                                56

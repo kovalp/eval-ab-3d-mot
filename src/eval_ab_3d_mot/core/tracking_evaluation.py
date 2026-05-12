@@ -898,9 +898,9 @@ class TrackingEvaluation(object):
         summary += (
             'evaluation with confidence threshold %f, recall %f' % (threshold, recall)
         ).center(80, '=') + '\n'
-        summary += ' sMOTA   MOTA   MOTP    MT     ML     IDS  FRAG    F1   Prec  Recall  FAR     TP    FP    FN\n'
+        summary += ' sMOTA     MOTA     MOTP      MT       ML       IDS  FRAG    F1     Prec    Recall    FAR       TP    FP    FN\n'
 
-        summary += '{:.4f} {:.4f} {:.4f} {:.4f} {:.4f} {:5d} {:5d} {:.4f} {:.4f} {:.4f} {:.4f} {:5d} {:5d} {:5d}\n'.format(
+        summary += '{:.6f} {:.6f} {:.6f} {:.6f} {:.6f} {:5d} {:5d} {:.6f} {:.6f} {:.6f} {:.6f} {:5d} {:5d} {:5d}\n'.format(
             self.sMOTA,
             self.MOTA,
             self.MOTP,
